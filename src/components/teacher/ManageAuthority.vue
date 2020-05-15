@@ -1,0 +1,230 @@
+<template>
+    <div class="container">
+        <div class="locat">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item >当前位置</el-breadcrumb-item>
+                <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="content">
+            <h3>
+                权限管理：
+                <el-button type="primary" size="mini" @click="handleAdd()">
+                    增加
+                    <i class="el-icon-upload el-icon--right"></i>
+                </el-button>
+            </h3>
+            <div class="admin">
+                
+                <el-table
+                    ref="filterTable"
+                    :data="tableData"
+                    stripe
+                    style="width: 100%"
+                    class="table">
+                    <el-table-column
+                        prop="username"
+                        label="用户名"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="realname"
+                        label="姓名"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="password"
+                        label="密码"
+                        width="180">  
+                    </el-table-column>
+                    <el-table-column
+                        prop="role"
+                        label="角色"
+                        width="180"
+                        :filters="[{text: '系统管理员', value: 'super'}, {text: '教务处', value: 'office'}, {text: '图书馆', value: 'library'}, {text: '财务处', value: 'finance'}, {text: '后勤处', value: 'dorm'}]"
+                        :filter-method="filterHandler">
+                    </el-table-column>
+                    <el-table-column
+                        prop="valid"
+                        label="是否有效"
+                        width="180"
+                        :filters="[{ text: '是', value: true }, { text: '否', value: false }]"
+                        :filter-method="filterTag"
+                        filter-placement="bottom-end">
+                        <template slot-scope="scope">
+                            <el-tag
+                            :type="scope.row.valid ? 'success' : 'warning'"
+                            disable-transitions>{{scope.row.valid}}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                            size="mini"
+                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                    layout="prev, pager, next"
+                    :total="this.tableData.length"
+                    class="page"
+                    :page-count="this.tableData.length/10+1"
+                    :pager-count="9"
+                    :hide-on-single-page="ifHide"
+                    @current-change="handleCurrentChange">
+                </el-pagination>
+            </div>
+        </div>
+
+
+        <el-dialog 
+            title="修改管理员信息" 
+            :visible.sync="modifyAdminInfo_dialogTableVisible" 
+            center :append-to-body='true' 
+            :lock-scroll="false" 
+            width="500px"
+            v-if="modifyAdminInfo_dialogTableVisible">
+            <modifyAdminInfo @func="closeModify"></modifyAdminInfo>
+        </el-dialog>
+
+        <el-dialog 
+            title="添加管理员" 
+            :visible.sync="addAdmin_dialogTableVisible" 
+            center :append-to-body='true' 
+            :lock-scroll="false" 
+            width="500px"
+            v-if="addAdmin_dialogTableVisible">
+            <addAdmin @func="closeAdd"></addAdmin>
+        </el-dialog>
+
+
+    </div>
+</template>
+
+<script>
+    import modifyAdminInfo from '@/components/popup/ModifyAdminInfo';
+    import addAdmin from '@/components/popup/AddAdmin';
+    export default {
+        data() {
+            return {
+                ifHide: true,
+                modifyAdminInfo_dialogTableVisible: false,
+                addAdmin_dialogTableVisible: false,
+                tableData: [],
+                currentPage: 1,
+                tableViewData: []
+            }
+        },
+        methods: {
+            resetDateFilter() {
+                this.$refs.filterTable.clearFilter('date');
+            },
+            clearFilter() {
+                this.$refs.filterTable.clearFilter();
+            },
+            filterTag(value, row) {
+                return row.valid === value;
+            },
+            filterHandler(value, row, column) {
+                const property = column['property'];
+                return row[property] === value;
+            },
+            handleEdit(index, row) {
+                console.log(index, row);
+                sessionStorage.setItem('rowAdminMsg', JSON.stringify(row));
+                this.modifyAdminInfo_dialogTableVisible = true;
+            },
+            handleAdd() {
+                this.addAdmin_dialogTableVisible = true;
+            },
+            handleDelete(index, row) {
+                console.log("点击了删除");
+            },
+            handleCurrentChange(val) {
+                console.log(`当前 ${val} 页`);
+                this.currentPage = val;
+                this.tableViewData.splice(0, this.tableViewData.length);
+                for (
+                    var i = (this.currentPage - 1) * 10;
+                    i < this.currentPage * 10 && i < this.tableData.length;
+                    i++
+                ) {
+                    this.tableViewData.push(this.tableData[i]);
+                }
+            },
+            closeAdd() {
+                this.addAdmin_dialogTableVisible = false;
+                this.getAllAdmin();
+            },
+            closeModify() {
+                this.modifyAdminInfo_dialogTableVisible = false;
+                this.getAllAdmin();
+            },
+            getAllAdmin() {
+                this.$axios({
+                    method: 'get',
+                    url: '/api/admin/get/all'
+                }).then((res) => {
+                    console.log('获取成功');
+                    console.log(res);
+                    this.tableData = res.data;
+                }).catch((error) => {
+                    console.log('管理员列表获取失败');
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers); 
+                    console.log('Error', error.message);
+                    console.log(error.config);
+                })
+            }
+        },
+        components: {
+            modifyAdminInfo,
+            addAdmin
+        },
+        mounted() {
+            this.getAllAdmin();
+            this.handleCurrentChange(1);
+        }
+    }
+</script>
+
+<style scoped>
+.locat {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+}
+.content {
+    /* border: 1px solid #000; */
+    position: absolute;
+    width: 100%;
+    top: 70px;
+    /* bottom: 0; */
+}
+.content h3 {
+    /* border: 1px solid #000; */
+    margin-left: 40px;
+}
+.admin {
+    /* border: 1px solid #000; */
+    margin-left: 40px;
+}
+.table {
+    /* border: 1px solid #000; */
+    border-top: 1px solid rgba(204, 204, 204, 0.441);
+    margin-top: 5px;
+}
+.page {
+    /* border: 1px solid #000; */
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+</style>
