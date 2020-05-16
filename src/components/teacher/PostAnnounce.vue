@@ -17,15 +17,14 @@
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="活动名称" prop="title">
+          <el-form-item label="公告标题" prop="title">
             <el-input v-model="ruleForm.title" class="title"></el-input>
           </el-form-item>
-          <el-form-item label="活动形式" prop="ruleForm.html">
+          <el-form-item label="公告内容" prop="content">
               <mavon-editor
               :toolbars="toolbars"
-              @imgAdd="handleEditorImgAdd"
-              @imgDel="handleEditorImgDel"
               style="height:500px"
+              :autofocus="false"
               v-model="ruleForm.content"
               @change="change"
               ref="md"
@@ -72,7 +71,6 @@ export default {
         ol: true, // 有序列表
         ul: true, // 无序列表
         link: true, // 链接
-        imagelink: true, // 图片链接
         code: false, // code
         table: true, // 表格
         fullscreen: true, // 全屏编辑
