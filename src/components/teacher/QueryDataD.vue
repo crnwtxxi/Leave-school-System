@@ -134,24 +134,7 @@
                     name: ""
                 },
                 tableData: [
-                    {
-                        username: "2017110206",
-                        name: "陈香伶",
-                        state: "1",
-                        remark: "无"
-                    },
-                    {
-                        username: "2017110206",
-                        name: "陈死狗",
-                        state: "0",
-                        remark: "钥匙未还"
-                    },
-                    {
-                        username: "2017110206",
-                        name: "权志龙",
-                        state: "0",
-                        remark: "钥匙未还"
-                    }
+                    
                 ],
                 multipleSelection: []
             }
@@ -187,7 +170,27 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
                 // console.log(val);
-            }
+            },
+            getDormInfo(){
+                this.$axios({
+                method: "get",
+                url: "/api/dorm/get/list"
+                }).then(res => {
+                    console.log("获取后勤数据成功!");
+                    console.log(res);
+                }).catch(error => {
+                    console.log("公告获取失败");
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                    console.log("Error", error.message);
+                    console.log(error.config);
+                });
+            },
+        },
+        mounted() {
+            console.log("调用加载函数成功!");
+            this.getDormInfo();
         },
         components: {
             modifyDormInfo,
