@@ -57,12 +57,17 @@
                             width="180">
                         </el-table-column>
                         <el-table-column
-                            prop="name"
+                            prop="realname"
                             label="姓名"
                             width="180">
                         </el-table-column>
                         <el-table-column
-                            prop="card_id"
+                            prop="password"
+                            label="密码"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="cardid"
                             label="身份证号码"
                             width="230">  
                         </el-table-column>
@@ -70,7 +75,7 @@
                             prop="sex"
                             label="性别"
                             width="100"
-                            :filters="[{ text: '男', value: '男' }, { text: '女', value: '女' }]"
+                            :filters="[{ text: '男', value: 1 }, { text: '女', value: 2 }]"
                             :filter-method="filterHandler">
                         </el-table-column>
                         <el-table-column
@@ -88,19 +93,19 @@
                             :filter-method="filterHandler">
                         </el-table-column>
                         <el-table-column
-                            prop="class"
+                            prop="clazz"
                             label="班级"
                             width="110"
                             :filters="[{ text: '1班', value: '1班' }, { text: '2班', value: '2班' }, { text: '3班', value: '3班' }, { text: '4班', value: '4班' }, { text: '5班', value: '5班' }]"
                             :filter-method="filterHandler">
                         </el-table-column>
-                        <el-table-column
+                        <!-- <el-table-column
                             prop="location"
                             label="寝室号"
                             width="180"
                             :filters="[{ text: '西3-106', value: '西3-106' }, { text: '西4-106', value: '西4-106' }]"
                             :filter-method="filterHandler">
-                        </el-table-column>
+                        </el-table-column> -->
                         <el-table-column
                             label="操作">
                             <template slot-scope="scope">
@@ -129,7 +134,7 @@
             :lock-scroll="false" 
             width="500px"
             v-if="modifySuperInfo_dialogTableVisible">
-            <modifySuperInfo></modifySuperInfo>
+            <modifySuperInfo @func="closeModify"></modifySuperInfo>
         </el-dialog>
 
         <el-dialog 
@@ -138,7 +143,7 @@
             center :append-to-body='true' 
             :lock-scroll="false" 
             width="500px">
-            <addStudent></addStudent>
+            <addStudent @func="closeAdd"></addStudent>
         </el-dialog>
 
 
@@ -157,28 +162,7 @@
                     username: "",
                     name: ""
                 },
-                tableData: [
-                    {
-                        username: "2017110206",
-                        name: "陈香伶",
-                        card_id: "123456199910227890",
-                        sex: "女",
-                        college: "计算机科学学院",
-                        major: "软件工程",
-                        class: "4班",
-                        location: "西3-106"
-                    },
-                    {
-                        username: "2017110206",
-                        name: "陈死狗",
-                        card_id: "123456199910227890",
-                        sex: "男",
-                        college: "音乐学院",
-                        major: "美声",
-                        class: "4班",
-                        location: "西4-106"
-                    }
-                ],
+                tableData: [],
                 multipleSelection: []
             }
         },
@@ -213,11 +197,39 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
                 // console.log(val);
+            },
+            closeAdd() {
+                this.addStudent_dialogTableVisible = false;
+                this.getAllStudent();
+            },
+            closeModify() {
+                this.modifySuperInfo_dialogTableVisible = false;
+                this.getAllStudent();
+            },
+            getAllStudent() {
+                this.$axios({
+                    method: 'get',
+                    url: '/api/student/get/all'
+                }).then((res) => {
+                    console.log('获取成功');
+                    console.log(res);
+                    this.tableData = res.data;
+                }).catch((error) => {
+                    console.log('学生列表获取失败');
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers); 
+                    console.log('Error', error.message);
+                    console.log(error.config);
+                })
             }
         },
         components: {
             modifySuperInfo,
             addStudent
+        },
+        mounted() {
+            this.getAllStudent();
         }
     }
 </script>

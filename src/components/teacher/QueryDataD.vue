@@ -58,29 +58,31 @@
                         </el-table-column>
                         <el-table-column
                             prop="name"
+                            align="center"
                             label="姓名"
                             width="180">
                         </el-table-column>
                         <el-table-column
                             prop="state"
                             label="后勤状态"
-                            width="140"
-                            :filters="[{ text: '不满足条件', value: '0' }, { text: '满足条件', value: '1' }]"
+                            align="center"
+                            :filters="[{ text: '未完成', value: '0' }, { text: '已完成', value: '1' }]"
                             :filter-method="filterTag"
                             filter-placement="bottom-end">
                             <template slot-scope="scope">
                                 <el-tag
                                 :type="scope.row.state=='1' ? 'success' : 'warning'"
-                                disable-transitions>{{scope.row.state}}</el-tag>
+                                disable-transitions>{{scope.row.state == '0'? '未完成':'已完成'}}</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column
                             prop="remark"
                             label="备注"
+                            align="center"
                             width="250">
                         </el-table-column>
                         <el-table-column
-                            label="操作">
+                            label="操作" align="center">
                             <template slot-scope="scope">
                                 <el-button
                                 size="mini"
@@ -134,29 +136,13 @@
                     name: ""
                 },
                 tableData: [
-                    {
-                        username: "2017110206",
-                        name: "陈香伶",
-                        state: "1",
-                        remark: "无"
-                    },
-                    {
-                        username: "2017110206",
-                        name: "陈死狗",
-                        state: "0",
-                        remark: "钥匙未还"
-                    },
-                    {
-                        username: "2017110206",
-                        name: "权志龙",
-                        state: "0",
-                        remark: "钥匙未还"
-                    }
+                    
                 ],
                 multipleSelection: []
             }
         },
         methods: {
+            // 查询的方法
             onQuery() {
                 console.log("提交查询")
             },
@@ -187,7 +173,28 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
                 // console.log(val);
-            }
+            },
+            getDormInfo(){
+                this.$axios({
+                method: "get",
+                url: "/api/dorm/get/list"
+                }).then(res => {
+                    console.log("获取后勤数据成功!");
+                    console.log(res);
+                    this.tableData = res.data;
+                }).catch(error => {
+                    console.log("公告获取失败");
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                    console.log("Error", error.message);
+                    console.log(error.config);
+                });
+            },
+        },
+        mounted() {
+            console.log("调用加载函数成功!");
+            this.getDormInfo();
         },
         components: {
             modifyDormInfo,
@@ -197,6 +204,10 @@
 </script>
 
 <style scoped>
+/* 
+ *带有scroped的style标签
+ *是有作用域的，其包含的样式只作用于当前组件
+ */
 .locat {
     position: absolute;
     top: 20px;
@@ -212,14 +223,15 @@
     margin-left: 40px;
 }
 .data {
-    position: absolute;
+    /* position: absolute; */
     /* border: 1px solid #000; */
-    width: 100%;
+    width: 80%;
+    height: 100%;
+    margin: 0 auto;
 }
 .delete {
     /* border: 1px solid #000; */
-    float: left;
-    margin-left: 40px;
+    float: left; 
     margin-top: 10px;
 }
 .query {
@@ -232,7 +244,7 @@
 .manage{
     /* border: 1px solid red; */
     clear: both;
-    margin-left: 40px;
+    /* margin-left: 40px; */
 }
 .page {
     /* border: 1px solid #000; */
