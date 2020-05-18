@@ -24,6 +24,7 @@
                 <div class="code">
                   <el-image
                     class="img"
+                    v-if="!code"
                     :src="url.codeUrl">
                   </el-image>
                   <el-button type="text" @click="changeCode()">看不清，换一张</el-button>
@@ -35,8 +36,9 @@
             </el-form-item>
         </el-form>
     </div>
-    <el-button @click="toStudent">学生系统入口</el-button>
-    <el-button @click="toTeacher">管理员系统入口</el-button>
+    <!-- <el-button @click="toStudent">学生系统入口</el-button>
+    <el-button @click="toTeacher">管理员系统入口</el-button> -->
+    <el-button @click="toHome">返回首页</el-button>
   </div>
 </template>
 
@@ -48,6 +50,7 @@ export default {
         url: {
           codeUrl: '/api/captcha.jpg'
         },
+        code: false,
         ruleForm: {
             username: '',
             password: '',
@@ -130,13 +133,20 @@ export default {
       this.$router.push('/teacher');
       // this.$router.push({ name: 'teacher', params: {irole: this.role} });
     },
+    toHome() {
+        this.$router.push('/');
+    },
     reqCode() {
       return "/api/captcha.jpg";
     },
     changeCode() {
-      console.log("hahha");
-      // this.url.codeUrl = "http://106.15.206.229/captcha.jpg"
-      Vue.set(this.url,"codeUrl","http://106.15.206.229/captcha.jpg");
+      console.log("change code");
+      var flag = this.code;
+      if(flag) {
+        this.code = false;
+      } else {
+        this.code = true;
+      }
     }
   }
 }

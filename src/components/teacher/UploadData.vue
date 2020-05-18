@@ -35,11 +35,49 @@
                 </div>
                 <div class="right">
                     <el-divider content-position="left">表头格式</el-divider>
-                    <div class="format">
+                    <!-- <div class="format">
                         <el-image
                             :src="require('@/assets/format.png')" alt="Load Failed">
                         </el-image>
-                    </div>
+                    </div> -->
+                    <el-table :data="tableDataOffice" border style="width: 100%;" v-if="office">
+                        <el-table-column prop="username" label="用户名" width="150"></el-table-column>
+                        <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+                        <el-table-column prop="chufen" label="处分" width="150"></el-table-column>
+                        <el-table-column prop="xuefen" label="学分" width="150"></el-table-column>
+                        <el-table-column prop="remark" label="备注" width="150"></el-table-column>
+                    </el-table>
+                    <el-table :data="tableDataDorm" border style="width: 100%" v-if="dorm">
+                        <el-table-column prop="username" label="用户名" width="150"></el-table-column>
+                        <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+                        <el-table-column prop="state" label="状态" width="150"></el-table-column>
+                        <el-table-column prop="remark" label="备注" width="150"></el-table-column>
+                    </el-table>
+                    <el-table :data="tableDataLibrary" border style="width: 100%" v-if="library">
+                        <el-table-column prop="username" label="用户名" width="150"></el-table-column>
+                        <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+                        <el-table-column prop="state" label="状态" width="150"></el-table-column>
+                        <el-table-column prop="cost" label="费用" width="150"></el-table-column>
+                        <el-table-column prop="remark" label="备注" width="150"></el-table-column>
+                    </el-table>
+                    <el-table :data="tableDataFinance" border style="width: 100%" v-if="finance">
+                        <el-table-column prop="username" label="用户名" width="150"></el-table-column>
+                        <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+                        <el-table-column prop="state" label="状态" width="150"></el-table-column>
+                        <el-table-column prop="cost" label="费用" width="150"></el-table-column>
+                        <el-table-column prop="remark" label="备注" width="150"></el-table-column>
+                    </el-table>
+                    <el-table :data="tableDataSuper" border style="width: 100%" v-if="this.super">
+                        <el-table-column prop="username" label="用户名" width="150"></el-table-column>
+                        <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+                        <el-table-column prop="sex" label="性别" width="150"></el-table-column>
+                        <el-table-column prop="password" label="密码" width="150"></el-table-column>
+                        <el-table-column prop="cardid" label="身份证号" width="180"></el-table-column>
+                        <el-table-column prop="college" label="学院" width="150"></el-table-column>
+                        <el-table-column prop="major" label="专业" width="150"></el-table-column>
+                        <el-table-column prop="clazz" label="班级" width="150"></el-table-column>
+                        <el-table-column prop="location" label="寝室" width="150"></el-table-column>
+                    </el-table>
                 </div>
             </div>
         </div>
@@ -51,12 +89,56 @@
         data() {
             return {
                 limitNum: 1,
-                fileList: []
+                fileList: [],
+                uploadRole: "",
+                office: false,
+                dorm: false,
+                library: false,
+                finance: false,
+                super: false,
+                tableDataOffice: [{
+                    username: '2017110xxx',
+                    realname: '张三',
+                    chufen: '0',
+                    xuefen: '1',
+                    remark: "处分记录未消除"
+                }],
+                tableDataDorm: [{
+                    username: '2017110xxx',
+                    realname: '张三',
+                    state: '1',
+                    remark: "寝室钥匙未归还"
+                }],
+                tableDataLibrary: [{
+                    username: '2017110xxx',
+                    realname: '张三',
+                    state: '1',
+                    cost: "10.3",
+                    remark: "借书超期应支付费用"
+                }],
+                tableDataFinance: [{
+                    username: '2017110xxx',
+                    realname: '张三',
+                    state: '1',
+                    cost: "200",
+                    remark: "教材费"
+                }],
+                tableDataSuper: [{
+                    username: '2017110xxx',
+                    realname: '张三',
+                    sex: '女',
+                    password: "123456",
+                    cardid: "123456199912234567",
+                    college: "计算机科学学院",
+                    major: "软件工程",
+                    clazz: "4",
+                    location: "西三-106"
+                }]
             }
         },
         methods: {
             UploadUrl() {
-                return "https://jsonplaceholder.typicode.com/posts/";
+                return "http://106.15.206.229/"+this.uploadRole+"/upload";
             },
             // 文件超出个数限制时的钩子
             exceedFile(files, fileList) {
@@ -123,27 +205,36 @@
                     });
                 } else {
                     console.log("调上传文件的接口");
-                    // let form = new FormData();
-                    // form.append('file', this.fileList);
-                    // this.$axios({
-                    //     method:"post",
-                    //     url: "/statistical/uploadbug",
-                    //     headers:{
-                    //         'Content-type': 'multipart/form-data'
-                    //     },
-                    //     data: form
-                    // }).then((res) => {
-                    //     console.log(res);
-                    // }).catch((error) => {
-                    //     console.log('上传失败');
-                    //     console.log(error.response.data);
-                    //     console.log(error.response.status);
-                    //     console.log(error.response.headers); 
-                    //     console.log('Error', error.message);
-                    //     console.log(error.config);
-                    // })
+                    var formData = new FormData();
+                    formData.append('file', this.fileList[0]);
+                    this.$axios.post("http://106.15.206.229/"+this.uploadRole+"/upload", formData)
+                    .then((res) => {
+                        console.log(res);
+                    }).catch((error) => {
+                        console.log('上传失败');
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers); 
+                        console.log('Error', error.message);
+                        console.log(error.config);
+                    })
+                }
+            },
+            //判断当前管理员角色和初始化
+            judgeRole() {
+                var user = JSON.parse(sessionStorage.getItem('user'));
+                this.uploadRole = user.role;
+                switch(this.uploadRole) {
+                    case "office": this.office = true;break;
+                    case "dorm": this.dorm = true;break;
+                    case "library": this.library = true;break;
+                    case "finance": this.finance = true;break;
+                    case "super": this.super = true;break;
                 }
             }
+        },
+        mounted() {
+            this.judgeRole();
         }
     }
 </script>

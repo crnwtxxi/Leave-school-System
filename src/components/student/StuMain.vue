@@ -5,10 +5,10 @@
             <div class="nav">
                 <a href="">帮助</a> | 
                 <a href="">关于</a> | 
-                <a href="">退出系统</a>
+                <a @click="toExit" class="exit">退出系统</a>
             </div>
             <div class="user">
-                当前用户：2017110206
+                当前用户：{{ this.userMsg.username }}
             </div>
         </div>
         <div class="content clearfix">
@@ -51,7 +51,7 @@
     export default {
         data() {
             return {
-
+                userMsg: {}
             }
         },
         methods: {
@@ -72,6 +72,26 @@
             },
             toSurveyList(){
                 this.$router.push('/student/surveylist')
+            },
+            getStuMsg() {
+                var user = JSON.parse(sessionStorage.getItem('user'));
+                if(user == null) {
+                    this.$router.push('/login');
+                    this.$notify({
+                        title: "请先登录",
+                        offset: 100,
+                        type: "warning",
+                        showClose: false,
+                        duration: 2500
+                    });
+                } else {
+                    this.userMsg = user
+                }
+            },
+            //退出系统
+            toExit() {
+                this.$router.push('/');
+                sessionStorage.removeItem('user');
             }
         },
         components: {
@@ -82,6 +102,7 @@
         },
         mounted() {
             this.toInformation();
+            this.getStuMsg();
         }
     }
 </script>
@@ -140,6 +161,9 @@
     height: 100%;
     left: 200px;
     right: 0;
+}
+.exit {
+    cursor: pointer;
 }
 
 

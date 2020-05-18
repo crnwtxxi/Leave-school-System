@@ -12,8 +12,8 @@
             </el-form-item>
             <el-form-item label="性别" prop="sex">
                 <el-radio-group v-model="ruleForm.sex">
-                    <el-radio label="男"></el-radio>
-                    <el-radio label="女"></el-radio>
+                    <el-radio label="1">男</el-radio>
+                    <el-radio label="2">女</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="学院" prop="college">
@@ -24,9 +24,6 @@
             </el-form-item>
             <el-form-item label="班级" prop="class">
                 <el-input v-model="ruleForm.class"></el-input>
-            </el-form-item>
-            <el-form-item label="寝室" prop="location">
-                <el-input v-model="ruleForm.location"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
                 <el-button type="primary" @click="submitForm('ruleForm')">立即添加</el-button>
@@ -48,8 +45,7 @@
                     sex: "",
                     college: "",
                     major: "",
-                    class: "",
-                    location: ""
+                    class: ""
                 },
                 rules: {
                     username: [
@@ -70,9 +66,6 @@
                     ],
                     class: [
                         { required: true, message: '请输入班级', trigger: 'blur' }
-                    ],
-                    location: [
-                        { required: true, message: '请输入寝室', trigger: 'blur' }
                     ]
                 }
             };
@@ -81,7 +74,45 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        // alert('submit!');
+                        var pwd = this.ruleForm.card_id.slice(12);
+                        this.$axios({
+                            method: 'post',
+                            url: '/api/student/create',
+                            withCredentials : true,
+                            data: {
+                                username: this.ruleForm.username,
+                                password: pwd,
+                                role: "student",
+                                realname: this.ruleForm.name,
+                                sex: this.ruleForm.sex,
+                                cardid: this.ruleForm.card_id,
+                                college: this.ruleForm.college,
+                                major: this.ruleForm.major,
+                                clazz: this.ruleForm.class
+                            },
+                            header: {
+                                'Content-Type': 'application/json;charset=UTF-8'
+                            }
+                        }).then((res) => {
+                            console.log('111');
+                            console.log(res);
+                            this.$notify({
+                                title: "学生信息修改成功",
+                                offset: 100,
+                                type: "success",
+                                showClose: false,
+                                duration: 1500
+                            });
+                            this.$emit('func');
+                        }).catch((error) => {
+                            console.log('添加管理员失败');
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers); 
+                            console.log('Error', error.message);
+                            console.log(error.config);
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
