@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import qs from 'qs'
 import axios from 'axios'
+import xss from 'xss'
 
 //引入 Element UI 组件
 import ElementUI from "element-ui";
@@ -13,6 +14,7 @@ Vue.use(ElementUI)
 
 Vue.prototype.$qs = qs
 Vue.prototype.$axios = axios
+Vue.prototype.$xss = xss
 
 // axios.defaults.baseURL = '/'  //每次发送的请求都会带一个/api的前缀
 
@@ -31,6 +33,7 @@ import student from '@/components/student/StuMain';
 import schedule from '@/components/student/Schedule';
 import information from '@/components/student/Information';
 import changepwd from '@/components/student/ChangePwd';
+import surveylist from '@/components/student/SurveyList';
 //teacher组件
 import teacher from '@/components/teacher/TeaMain';
 import changepwd2 from '@/components/teacher/ChangePwd2';
@@ -93,6 +96,10 @@ export default new Router({
                     path: 'changepwd',
                     name: 'changepwd',
                     component: changepwd
+                }, {
+                    path: 'surveylist',
+                    name: 'surveylist',
+                    component: surveylist
                 }
             ]
         },

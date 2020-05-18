@@ -30,6 +30,10 @@
                         <i class="el-icon-collection-tag"></i>
                         <span slot="title" @click="toSchedule">离校手续进度</span>
                     </el-menu-item>
+                    <el-menu-item index="3">
+                        <i class="el-icon-edit"></i>
+                        <span slot="title" @click="toSurveyList">查看调查</span>
+                    </el-menu-item>
                 </el-menu>
             </div>
             <div class="component">
@@ -43,6 +47,7 @@
     import schedule from '@/components/student/Schedule';
     import information from '@/components/student/Information';
     import changepwd from '@/components/student/ChangePwd';
+    import surveylist from '@/components/student/SurveyList';
     export default {
         data() {
             return {
@@ -64,12 +69,16 @@
             },
             toSchedule() {
                 this.$router.push('/student/schedule')
+            },
+            toSurveyList(){
+                this.$router.push('/student/surveylist')
             }
         },
         components: {
             schedule,
             information,
-            changepwd
+            changepwd,
+            surveylist
         },
         mounted() {
             this.toInformation();

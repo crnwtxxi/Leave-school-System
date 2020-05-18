@@ -10,15 +10,16 @@
         <div class="content">
             <h3>发布调查：</h3>
             <div class="QA">
+                      <h4>公告题目：</h4><input style="width: 500px;" v-model="title">
                       <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="选择题" name="first">
-                    <div id="select">
+                    <div id="select" >
                         
                         <!-- <button v-on:click="addSelect">添加题目</button> -->
                   
                         
                         <ul>
-                           <li v-for="(item,index) in items" style="margin-top:30px">
+                           <li v-for="(item,index) in items" style="margin-top:30px" :key="item.id">
                             <input style="width:500px;margin-left: 15px" placeholder="请输入标题" @input="updateTitleSelect($event,index)">
                 <!--         <el-input placeholder="请输入标题" style="width: 500px" ></el-input> -->
                             <br>
@@ -29,12 +30,14 @@
                             <a>D:</a><input type="" name="" style="width:100px;margin-left: 5px" input="updateSelectOption($event,index,3)">
                             <br>
 
-                        </li>
+                            </li>
 
                             
                         </ul>
-                        <el-button type="primary" plain class="add" v-on:click="addSelect">添加题目</el-button>
-                        </div>
+                         <el-button type="primary" plain class="add" v-on:click="addSelect">添加题目</el-button>
+
+                        <el-button type="primary" plain class="add" v-on:click="deleteSelect">删除题目</el-button>
+                                               </div>
                     </el-tab-pane>
                     <el-tab-pane label="问答题" name="second">
                     
@@ -49,15 +52,16 @@
                             </li>
                         </ul>
                         <el-button type="primary" plain class="add"  v-on:click="addQuestion">添加题目</el-button>
+                         <el-button type="primary" plain class="add"  v-on:click="deleteQuestion">删除题目</el-button>
 
 
                     </div>
                 </el-tab-pane>
                 </el-tabs>
+                 <el-button type="primary" plain class="add" style="margin-top:80px; " v-on:click="verify">发布</el-button>
            </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -66,25 +70,82 @@
     export default {
         data() {
             return {
-            
+                title:"",
                 items:[
-                    {title:'Foo',option:["1","2","3","4"]},
-                    {title:'Bar',option:["2","2","2","3"]}
+                    {title:'',option:["","","",""]},
+
                     ],
                     activeName:'first',
                 question:[
-                    {title:"你对这次的服务还有什么建议"}
+                    {title:""}
                     ]
                 }
-
             
         },
         methods: {
+             open() {
+                  this.$alert('您的信息还未创建完整', '错误提醒', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                 this.$message({
+                        type: 'info',
+                        message: `请检查发布内容`
+                         });
+                        }
+                    });
+                    }
+                ,
+            deleteQuestion:function(){
+                this.question.pop()
+            },
+
+            deleteSelect:function(){
+                this.items.pop()
+            } ,
             addSelect:function(){
-                this.items.push({message:"tmp",option:["1","1","2","1"]})
+                var len=this.items.length
+                
+                if(len==0){
+                     this.items.push({title:'',option:["","","",""]})
+                     return
+                }
+                var check1=this.items[len-1].title
+                var flg1=1
+                var flg2=1
+                if(check1==''){
+                    flg1=0
+                }
+                
+                    var check2=this.items[len-1].option
+                    for (var i in check2){
+                        if(i==''){
+                            flg2=0
+                        }
+                    }
+                
+
+
+                if((!flg1||!flg2)){
+                    this.open()
+                }
+                else {
+                this.items.push({title:'',option:["","","",""]})
+            }
+            
             },
             addQuestion:function () {
-                this.question.push({title:"i am here"})
+                var len=this.question.length
+                if(len==0){
+                    this.question.push({title:""})
+                    return 
+                }
+                var check1=this.question[len-1].title
+                if(check1==''){
+                    this.open()
+                }
+                else{
+                this.question.push({title:""})
+            }
                 
             },
             updateTitleSelect:function(event,index){
@@ -109,6 +170,35 @@
             },
             handleClick(tab,event){
 
+            },
+            postSurvey:function(){
+                //
+                    // 将数据传送到数据库，然后页面展示发布成功，然后
+                //
+            },
+            verify() {
+                var check=this.title
+
+                if(check==''){
+                    this.open()
+                    return
+                }
+
+                this.$confirm('确认发布？，是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '调查发布成功！'
+                });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消发布！'
+                    });          
+                });
             }
 
         }
@@ -129,12 +219,18 @@
 }
 .content h3 {
     margin-left: 40px;
+
 }
 .QA{
-    margin-left: 200px;
+    margin-left: 250px;
+    width: 800px;
 }
 .add{
     float: right;
-    margin-right: 500px;
+    margin-right: 20px;
 }
+input{
+    border-radius:5px;
+}
+
 </style>

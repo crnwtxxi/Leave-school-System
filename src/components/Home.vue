@@ -13,29 +13,30 @@
             <el-image :src="item.image" fit="fill"></el-image>
           </el-carousel-item>
         </el-carousel>
+        <span v-html="$xss(attack)"></span>
+        <div class="page_container">
+          <el-pagination
+              layout="prev, pager, next"
+              :total="this.announce.length"
+              class="page"
+              :page-size="10"
+              :pager-count="5"
+              :current-page.sync="currentPage"
+              @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
       </div>
       <div class="right">
         <el-divider content-position="left" class="announce-title">最新公告</el-divider>
         <div class="announce">
           <!-- 此处公告 -->
-          <div v-for="item in announce" :key="item.id">
+          <div v-for="item in announcePage" :key="item.id">
             <div class="aAnnounce" @click="toAnnounce(item.id)">
               <span class="atitle">{{ item.title }}</span>
               <span class="adate">{{ item.date }}</span>
               <el-divider></el-divider>
             </div>
           </div>
-        </div>
-        <div class="page">
-          <el-pagination
-              layout="prev, pager, next"
-              :total="this.announce.length"
-              class="page"
-              :page-count="this.announce.length/this.pageCount+1"
-              :page-size="pageCount"
-              :hide-on-single-page="ifHide"
-              @current-change="handleCurrentChange">
-          </el-pagination>
         </div>
       </div>
     </div>
@@ -49,10 +50,9 @@
 export default {
   data () {
     return {
-        ifHide: false,
-        pageCount: 10,
-        currentPage: 1,
-        announce: [],
+        pageCount: 10,//每页显示多少条数据
+        currentPage: 1,//当前页数
+        announce: [],//公告数据
         announcePage: [],
         carouselList: [
           { id: 1, image: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg' },
@@ -62,23 +62,27 @@ export default {
           { id: 5, image: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg' },
           { id: 6, image: 'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg' }
         ],
+        attack: '<a onmouseover=alert("XSS攻击")>click me!</a>'
     }
   },
   methods: {
     toLogin() {
       this.$router.push('/login')
     },
+    //查询公告详情
     toAnnounce(id) {
       this.$router.push({ name: 'announce', params: {id: id} });
     },
+    //获取所有公告
     getAnnounces() {
       this.$axios({
           method: 'get',
           url: '/api/notice/get/list'
       }).then((res) => {
-          console.log('111');
           console.log(res);
+          console.log(res.data.length)
           this.announce = res.data;
+          this.handleCurrentChange(1);
       }).catch((error) => {
           console.log('公告获取失败');
           console.log(error.response.data);
@@ -88,22 +92,32 @@ export default {
           console.log(error.config);
       })
     },
+    showdate() {
+      this.currentPage = 1;
+      if(this.announce.length<=10){
+        this.announcePage = this.announce.splice(0,this.announce.length-1);
+      } else {
+        this.announcePage = this.announce.splice(0,9);
+      }
+    },
+    //翻页
     handleCurrentChange(val) {
         console.log(`当前 ${val} 页`);
         this.currentPage = val;
         this.announcePage.splice(0, this.announcePage.length);
-        for (
-            var i = (this.currentPage - 1) * this.pageCount;
-            i < this.currentPage * this.pageCount && i < this.announce.length;
-            i++
-        ) {
-            this.announcePage.push(this.announce[i]);
+        for(
+          var i = (this.currentPage -1)*this.pageCount;
+          i<this.currentPage*this.pageCount&&i<this.announce.length;
+          i++
+        ){
+          this.announcePage.push(this.announce[i]);
         }
     }
   },
   mounted() {
     this.getAnnounces();
     this.handleCurrentChange(1);
+    // this.showdate();
   }
 }
 </script>
@@ -149,7 +163,8 @@ export default {
   height: 100%;
   top: 100px;
   bottom: 50px;
-  /* border: 1px solid #000; */
+  /* border: 1px solid red; */
+  /* overflow-y: scroll; */
   padding: 0 5% 0 2%;
   box-shadow: -10px 0 10px #ccc;
 }
@@ -180,11 +195,13 @@ export default {
   margin-top: 50px;
   /* border: 1px solid #000; */
 }
-.right .page {
+.page_container {
   position: absolute;
+  left: 5%;
+  /* right: 0; */
   bottom: 10px;
   text-align: center;
-  width: 62%;
+  width: 20%;
   /* border: 1px solid #000; */
 }
 .footer {

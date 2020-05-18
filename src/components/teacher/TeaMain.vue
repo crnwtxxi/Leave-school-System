@@ -5,7 +5,7 @@
             <div class="nav">
                 <a href="">帮助</a> | 
                 <a href="">关于</a> | 
-                <a href="">退出系统</a>
+                <a @click="toExit" class="exit">退出系统</a>
             </div>
             <div class="user">
                 当前用户：{{ this.userMsg.username }}
@@ -138,8 +138,26 @@
             },
             getRoleName() {
                 // console.log(sessionStorage.getItem('user'));
-                this.userMsg = JSON.parse(sessionStorage.getItem('user'));
+                var user = JSON.parse(sessionStorage.getItem('user'));
+                if(user == null) {
+                    this.$router.push('/login');
+                    this.$notify({
+                        title: "请先登录",
+                        offset: 100,
+                        type: "warning",
+                        showClose: false,
+                        duration: 2500
+                    });
+                } else {
+                    this.userMsg = user
+                }
+                
                 // console.log(this.userMsg.role+this.userMsg.username);
+            },
+            //退出系统
+            toExit() {
+                this.$router.push('/');
+                sessionStorage.removeItem('user');
             }
         },
         components: {
@@ -222,6 +240,9 @@
     right: 0;
     bottom: 0;
     overflow-y: scroll;
+}
+.exit {
+    cursor: pointer;
 }
 
 
