@@ -10,27 +10,23 @@
         <div class="content">
             <h3>发布调查：</h3>
             <div class="QA">
-                      <h4>公告题目：</h4><input style="width: 500px;" v-model="title">
+                      <h4>公告题目：</h4><input class="eInput" style="width: 500px;" v-model="title">
                       <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="选择题" name="first">
-                    <div id="select" >
-                        
-                        <!-- <button v-on:click="addSelect">添加题目</button> -->
-                  
-                        
+                    <div id="select" >                       
                         <ul>
-                           <li v-for="(item,index) in items" style="margin-top:30px" :key="item.id">
-                            <input style="width:500px;margin-left: 15px" placeholder="请输入标题" @input="updateTitleSelect($event,index)">
+                           <li v-for="(item,index) in items" style="margin-top:30px">
+                            <input style="width:500px;margin-left: 15px" class="eInput" placeholder="请输入标题" @input="updateTitleSelect($event,index)">
                 <!--         <el-input placeholder="请输入标题" style="width: 500px" ></el-input> -->
                             <br>
                             <br>
-                            <a>A:</a><input type="" name="" style="width:100px;margin-left: 5px" input="updateSelectOption($event,index,0)">
-                            <a>B:</a><input type="" name="" style="width:100px;margin-left: 5px" input="updateSelectOption($event,index,1)">
-                            <a>C:</a><input type="" name="" style="width:100px;margin-left: 5px" input="updateSelectOption($event,index,2)"> 
-                            <a>D:</a><input type="" name="" style="width:100px;margin-left: 5px" input="updateSelectOption($event,index,3)">
+                            <a>A:</a><input class="eInput" type="" name="" style="width:100px;margin-left: 5px" @input="updateSelectOption($event,index,0)">
+                            <a>B:</a><input class="eInput" type="" name="" style="width:100px;margin-left: 5px" @input="updateSelectOption($event,index,1)">
+                            <a>C:</a><input class="eInput" type="" name="" style="width:100px;margin-left: 5px" @input="updateSelectOption($event,index,2)"> 
+                            <a>D:</a><input class="eInput" type="" name="" style="width:100px;margin-left: 5px" @input="updateSelectOption($event,index,3)">
                             <br>
 
-                            </li>
+                        </li>
 
                             
                         </ul>
@@ -46,15 +42,13 @@
                         <!-- <button v-on:click="addQuestion">添加题目</button> -->
                         <ul>
                            <li v-for="(item,index) in question" :key="item.message" style="margin-top:30px">
-                             <input placeholder="请输入标题" style="width: 500px" @input="updateQuestion($event,index)">
+                             <input class="eInput" placeholder="请输入标题" style="width: 500px" @input="updateQuestion($event,index)">
                <!--              <input type="" name="" style="width:400px;margin-left: 15px" @input="updateQuestion($event,index)"> -->
                             <br>
                             </li>
                         </ul>
                         <el-button type="primary" plain class="add"  v-on:click="addQuestion">添加题目</el-button>
                          <el-button type="primary" plain class="add"  v-on:click="deleteQuestion">删除题目</el-button>
-
-
                     </div>
                 </el-tab-pane>
                 </el-tabs>
@@ -62,12 +56,14 @@
            </div>
             </div>
         </div>
+    </div>
 </template>
 
 <script>
 
     
     export default {
+     
         data() {
             return {
                 title:"",
@@ -159,9 +155,9 @@
             },
             updateSelectOption:function(event,index,optionIndex){
                 var updateValue=event.currentTarget.value
-                console.log(this.items[index].option[optionIndex])
+                //console.log(this.items[index].option[optionIndex])
                 this.items[index].option[optionIndex]=updateValue
-                console.log(items)
+                //console.log(this.items[index].option[optionIndex])
             },
             updateQuestion:function(event,index){
                 var updateValue=event.currentTarget.value
@@ -189,10 +185,46 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '调查发布成功！'
-                });
+                 this.$axios({
+                            method: 'post',
+                            url: 'http://106.15.206.229/survey/post',
+                            withCredentials : true,
+                            data: {
+                               title:this.title,
+                               choice:this.items,
+                               questionAnswer:this.question
+                            },
+                            header: {
+                                'Content-Type': 'application/json;charset=UTF-8'
+                            }
+                        }).then((res) => {
+                            console.log('111');
+                            console.log(res);
+                            this.$notify({
+                                title: "发布成功",
+                                offset: 100,
+                                type: "success",
+                                showClose: false,
+                                duration: 1500
+                            });
+                            this.$emit('func');
+                        }).catch((error) => {
+                             this.$message({
+                                     type: 'info',
+                                     message: '发布失败，请重新尝试！'
+                                 });    
+                            console.log('失败');
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers); 
+                            console.log('Error', error.message);
+                            console.log(error.config);
+                        })
+                // this.$message({
+
+                //     type: 'success',
+                //     message: '调查发布成功！'
+                // });
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -229,8 +261,30 @@
     float: right;
     margin-right: 20px;
 }
-input{
+/*input{
     border-radius:5px;
 }
-
+*/
+.eInput{
+  width:350px;
+  border-radius: 4px;
+  border:1px solid #dcdfe6;
+  height: 40px;
+  line-height:40px;
+      -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    padding: 0 15px;
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    
+}
 </style>
