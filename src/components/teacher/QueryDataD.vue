@@ -52,15 +52,21 @@
                             width="55">
                         </el-table-column>
                         <el-table-column
-                            prop="username"
+                            prop="user_name"
                             label="用户名"
-                            width="180">
+                            width="120">
                         </el-table-column>
                         <el-table-column
                             prop="name"
                             align="center"
                             label="姓名"
-                            width="180">
+                            width="200">
+                        </el-table-column>
+                         <el-table-column
+                            prop="location"
+                            label="寝室号"
+                            align="center"
+                            width="120">
                         </el-table-column>
                         <el-table-column
                             prop="state"
@@ -79,7 +85,7 @@
                             prop="remark"
                             label="备注"
                             align="center"
-                            width="250">
+                            width="180">
                         </el-table-column>
                         <el-table-column
                             label="操作" align="center">
@@ -172,7 +178,6 @@
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-                // console.log(val);
             },
             getDormInfo(){
                 this.$axios({
@@ -183,7 +188,7 @@
                     console.log(res);
                     this.tableData = res.data;
                 }).catch(error => {
-                    console.log("公告获取失败");
+                    console.log("后勤数据获取失败");
                     console.log(error.response.data);
                     console.log(error.response.status);
                     console.log(error.response.headers);
@@ -191,6 +196,15 @@
                     console.log(error.config);
                 });
             },
+            successAdd(){
+                this.addDorm_dialogTableVisible = false;
+                this.getDormInfo();
+            },
+            successEdit(){
+                console.log('修改成功函数被调用!');
+                this.modifyDormInfo_dialogTableVisible = false;
+                this.getDormInfo();
+            }
         },
         mounted() {
             console.log("调用加载函数成功!");
