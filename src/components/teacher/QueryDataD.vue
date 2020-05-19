@@ -98,9 +98,14 @@
                         </el-table-column>
                     </el-table>
                     <el-pagination
-                        layout="prev, pager, next"
-                        :total="50"
-                        class="page">
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[5,10,15,20]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        class="page"
+                        :total="tableDataCount">
                     </el-pagination>
                 </div>
             </div>
@@ -144,13 +149,52 @@
                 tableData: [
                     
                 ],
-                multipleSelection: []
+                tableAllData:[
+
+                ],
+                tablefilterData:[
+
+                ],
+                multipleSelection: [],
+                // 当前的页码
+                currentPage: 1,
+                // 每页数据的数量
+                pageSize: 5,
+                //总的数据
+                tableDataCount: 0,
             }
         },
         methods: {
+            handleSizeChange(val){
+                this.pageSize = val;
+                this.handleCurrentChange(1);
+            },
+            handleCurrentChange(val){
+                console.log("调用了handleCurrentChange函数,当前页"+val);
+                this.currentPage = val;
+                this.tableData.splice(0, this.tableData.length);
+                for (
+                    var i = (this.currentPage - 1) * this.pageSize;
+                    i < this.currentPage * this.pageSize && i < this.tableDataCount;
+                    i++
+                ) {
+                    this.tableData.push(this.tableAllData[i]);
+                }
+                console.log("tableData的数据");
+                console.log(this.tableData);
+            },
             // 查询的方法
             onQuery() {
-                console.log("提交查询")
+                console.log("调用了查询");
+                // this.tablefilterData = this.tableAllData;
+                // console.log(this.tableAllData.length);
+                // this.tableAllData.splice(0,this.tableAllData.length);
+                // this.tablefilterData.forEach(element => {
+                //     if((this.ruleForm.username == ""||this.ruleForm.username == element.user_name)&&(this.ruleForm.name == ""||this.ruleForm.name == element.name)){
+                //         this.tableAllData.push(element);
+                //     }
+                // });
+                this.handleCurrentChange(1);
             },
             resetDateFilter() {
                 this.$refs.filterTable.clearFilter('date');
@@ -174,10 +218,51 @@
                 this.addDorm_dialogTableVisible = true;
             },
             handleDelete() {
-                console.log("点击了删除");
+                this.$confirm("此操作将永久删除选中的学生, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                    center: true
+                }).then(() => {
+                    this.multipleSelection.forEach(element => {
+                        this.handleReqDelete(element.id,element.name);
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: "info",
+                        message: "已取消删除"
+                    });
+                });
+            },
+            handleReqDelete(id,name){
+                this.$axios({
+                    method: "get",
+                    url: "/api/dorm/remove/" + id
+                }).then(res => {
+                    this.tableAllData.some((item, index) => {
+                        if (item.id == id) {
+                            this.tableAllData.splice(index, 1);
+                            this.tableDataCount = this.tableDataCount - 1;
+                            return true;
+                        }
+                    });
+                    console.log("当前tableAllData的数据：" + this.tableAllData);
+                    this.$message({
+                        type: "success",
+                        message: "删除学生"+name+"成功!"
+                    });
+                    this.handleCurrentChange(1);
+                }).catch(error => {
+                    this.$message({
+                        type: "error",
+                        message: "请求错误，删除"+name+"学生失败!"
+                    });
+                    console.log(error);
+                });
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                console.log(this.multipleSelection);
             },
             getDormInfo(){
                 this.$axios({
@@ -186,7 +271,9 @@
                 }).then(res => {
                     console.log("获取后勤数据成功!");
                     console.log(res);
-                    this.tableData = res.data;
+                    this.tableAllData = res.data;
+                    this.tableDataCount = this.tableAllData.length;
+                    this.handleCurrentChange(1);
                 }).catch(error => {
                     console.log("后勤数据获取失败");
                     console.log(error.response.data);
