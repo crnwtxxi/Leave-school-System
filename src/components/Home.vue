@@ -51,59 +51,6 @@
 
 <script>
 export default {
-<<<<<<< HEAD
-  data () {
-    return {
-        pageCount: 10,//每页显示多少条数据
-        currentPage: 1,//当前页数
-        announce: [],//公告数据
-        announcePage: [],
-        carouselList: [
-          { id: 1, image: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg' },
-          { id: 2, image: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg' },
-          { id: 3, image: 'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg' },
-          { id: 4, image: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg' },
-          { id: 5, image: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg' },
-          { id: 6, image: 'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg' }
-        ],
-        attack: '<a onmouseover=alert("XSS攻击")>click me!</a>'
-    }
-  },
-  methods: {
-    toLogin() {
-      this.$router.push('/login')
-    },
-    //查询公告详情
-    toAnnounce(id) {
-      this.$router.push({ name: 'announce', params: {id: id} });
-    },
-    //获取所有公告
-    getAnnounces() {
-      this.$axios({
-          method: 'get',
-          url: 'http://106.15.206.229/notice/get/list'
-      }).then((res) => {
-          console.log(res);
-          console.log(res.data.length)
-          this.announce = res.data;
-          this.handleCurrentChange(1);
-      }).catch((error) => {
-          console.log('公告获取失败');
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers); 
-          console.log('Error', error.message);
-          console.log(error.config);
-      })
-    },
-    showdate() {
-      this.currentPage = 1;
-      if(this.announce.length<=10){
-        this.announcePage = this.announce.splice(0,this.announce.length-1);
-      } else {
-        this.announcePage = this.announce.splice(0,9);
-      }
-=======
     data () {
         return {
             ifHide: true,//当数据只有一页时隐藏页码
@@ -139,7 +86,6 @@ export default {
             ],
             attack: '<a onmouseover=alert("XSS攻击")>click me!</a>'
         }
->>>>>>> 12ad377ac0eb4a99b6d393ba5d41cc030af87d0c
     },
     methods: {
         toLogin() {

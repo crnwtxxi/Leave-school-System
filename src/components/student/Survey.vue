@@ -13,7 +13,7 @@
         <div v-for="item in questionData.choice">
           <template>
             <h4>{{item.title}}</h4>
-            <el-radio-group v-model="item.radio">
+            <el-radio-group v-model="item.radio" >
             <el-radio label="1">{{item.radio}}</el-radio>
             <el-radio label="2">{{item.B.title}}</el-radio>
             <el-radio label="3">{{item.C.title}}</el-radio>
@@ -47,6 +47,7 @@ export default {
       tableViewData: [],
       //题目数据
       title:"x",
+      username:"",
       questionData:{
         choice:[
                 {
@@ -167,6 +168,7 @@ export default {
                             url: 'http://106.15.206.229/survey/finish',
                             withCredentials : true,
                             data: {
+                              username:this.username,
                                id:this.$route.query.id,
                                title:this.title,
                                choice:this.questionData.choice,
@@ -212,8 +214,9 @@ export default {
             }
   },
   mounted() {
-      // var user=JSON.parse(sessionStorage.getItem('user'));
-      // console.log(user.username
+       var user=JSON.parse(sessionStorage.getItem('user'));
+       console.log(user.username)
+       console.log('hahhah')
       var Sid=this.$route.query.id
       //这里记得最后 要改
 
@@ -242,7 +245,10 @@ export default {
                             //this.questionAnswer.questionAnswer=res.data.questionAnswer
                             // console.log(this.title)
                             // 
-
+                             var user=JSON.parse(sessionStorage.getItem('user'));
+                             console.log(user.username)
+                             this.username=uer.username
+                             console.log('hahhah')
                             console.log(this.questionData)
                         }).catch((error) => {
                              
