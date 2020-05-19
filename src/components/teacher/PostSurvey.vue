@@ -66,14 +66,14 @@
      
         data() {
             return {
-                title:"",
+                title:"xx",
                 items:[
-                    {title:'',option:["","","",""]},
+                    {title:'xx',option:["x","x","x","x"]},
 
                     ],
                     activeName:'first',
                 question:[
-                    {title:""}
+                    {title:"x"}
                     ]
                 }
             

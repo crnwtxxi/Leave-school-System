@@ -13,10 +13,12 @@
         <div v-for="item in questionData.choice">
           <template>
             <h4>{{item.title}}</h4>
-            <el-radio v-model="item.radio" label="1">{{item.A.title}}</el-radio>
-            <el-radio v-model="item.radio" label="2">{{item.B.title}}</el-radio>
-            <el-radio v-model="item.radio" label="3">{{item.C.title}}</el-radio>
-            <el-radio v-model="item.radio" label="4">{{item.D.title}}</el-radio>
+            <el-radio-group v-model="item.radio">
+            <el-radio label="1">{{item.radio}}</el-radio>
+            <el-radio label="2">{{item.B.title}}</el-radio>
+            <el-radio label="3">{{item.C.title}}</el-radio>
+            <el-radio  label="4">{{item.D.title}}</el-radio>
+            </el-radio-group>
           </template>
         </div>
       </div>
@@ -44,8 +46,7 @@ export default {
       // 表格的数据
       tableViewData: [],
       //题目数据
-      title:"",
-
+      title:"x",
       questionData:{
         choice:[
                 {
@@ -57,7 +58,7 @@ export default {
                       {title:"不满意"}
                  
                   ],
-                   radio:'1'
+                   radio:"1"
                 }
         ],
         questionAnswer:[
@@ -229,7 +230,7 @@ export default {
                             this.questionData.choice=res.data.choice
                             var len=this.questionData.choice.length
                             for(var i =0 ; i < len ; i++){
-                              this.questionData.choice[i].radio='1'
+                              this.questionData.choice[i].radio="1"
                             }
                             var tmpJson=res.data.questionAnswer
                             console.log(tmpJson)
