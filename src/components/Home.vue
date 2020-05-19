@@ -77,7 +77,7 @@ export default {
     getAnnounces() {
       this.$axios({
           method: 'get',
-          url: '/api/notice/get/list'
+          url: 'http://106.15.206.229/notice/get/list'
       }).then((res) => {
           console.log(res);
           console.log(res.data.length)

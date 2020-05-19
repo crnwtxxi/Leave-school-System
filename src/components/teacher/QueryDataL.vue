@@ -42,7 +42,7 @@
                     <el-divider></el-divider>
                     <el-table
                         ref="filterTable"
-                        :data="tableData"
+                        :data="tableView"
                         stripe
                         style="width: 100%"
                         class="table"
@@ -94,11 +94,17 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination
-                        layout="prev, pager, next"
-                        :total="50"
-                        class="page">
+                    <div id="page">
+                      <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage" 
+                        :page-sizes="[1,3,10,15,20]" 
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper" 
+                        :total="tableData.length">
                     </el-pagination>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,6 +117,7 @@
             :append-to-body='true' 
             :lock-scroll="false" 
             width="500px"
+            :before-close="handleDialogClose"
             v-if="modifyLibraryInfo_dialogTableVisible">
             <modifyLibraryInfo></modifyLibraryInfo>
         </el-dialog>
@@ -120,6 +127,7 @@
             :visible.sync="addLibrary_dialogTableVisible" 
             center :append-to-body='true' 
             :lock-scroll="false" 
+            :before-close="handleDialogClose"
             width="500px">
             <addLibrary></addLibrary>
         </el-dialog>
@@ -140,6 +148,9 @@
                     username: "",
                     name: ""
                 },
+                tableView:[],
+                currentPage:1,
+                pageSize:3,
                 tableData: [
                     {
                         username: "2017110206",
@@ -193,17 +204,118 @@
             handleAdd() {
                 this.addLibrary_dialogTableVisible = true;
             },
+            handleDialogClose(){
+                this.getDataList();
+                this.modifyLibraryInfo_dialogTableVisible=false;
+                this.addLibrary_dialogTableVisible=false;
+            },
+            postDelete(id){
+                this.$axios({
+                method: 'get',
+                url: 'http://106.15.206.229/library/del/'+id
+
+                }).then((res) => {
+                console.log('111');
+                // console.log(res.data);
+                console.log("yes")
+                
+
+                }).catch((error) => {
+
+                console.log('删除失败');
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                console.log('Error', error.message);
+                console.log(error.config);
+                })
+            },
+            getDataList(){
+                 this.$axios({
+                 method: 'get',
+                 url: 'http://106.15.206.229/library/get/list'
+
+                 }).then((res) => {
+                 this.tableData=res.data
+                 this.handleCurrentChange(1);
+                 }).catch((error) => {
+
+                 console.log('调查获取失败');
+                 console.log(error.response.data);
+                 console.log(error.response.status);
+                 console.log(error.response.headers);
+                 console.log('Error', error.message);
+                 console.log(error.config);
+                 })
+            },
             handleDelete() {
-                console.log("点击了删除");
+                    var len=this.multipleSelection.length
+                    var tmpTable=this.multipleSelection
+                    var len2=this.tableData.length
+                    var len3=this.tableView.length
+                    //  前端的删除
+                    
+                    for(var i = 0 ; i < len ; i++){
+                        console.log(tmpTable[i].id)
+                        for(var j = 0; j<len2;j++){
+                                if(tmpTable[i].id==this.tableData[j].id){
+                                    this.tableData.splice(j,1);
+                                    break;
+                                }
+                        }
+                        for(var j = 0 ; j < len3 ; j++){
+                            if(tmpTable[i].id==this.tableView[j].id){
+                                    this.tableView.splice(j,1);
+                                    break;
+                            }
+                        }
+                        //与数据库进行交互删除
+                        this.postDelete(tmpTable[i].id)
+                        // this.tableData.splice(tmpTable[i].id-1,1)
+                    }
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-                // console.log(val);
-            }
+               // console.log(val);
+            },
+            handleSizeChange(val) {
+            console.log(`每页大小为：${val}`);
+            this.pageSize = val;
+            this.handleCurrentChange(1);
+            },
+            // currentPage 改变时会触发
+            handleCurrentChange(val) {
+                console.log(`当前 ${val} 页`);
+                this.currentPage = val;
+                this.tableView.splice(0, this.tableView.length);
+
+            for (
+            var i = (this.currentPage - 1) * this.pageSize;
+            i < this.currentPage * this.pageSize && i < this.tableData.length; i++ ) {
+              this.tableView.push(this.tableData[i]); } },
         },
         components: {
             modifyLibraryInfo,
             addLibrary
+        },
+        mounted(){
+                 
+                 this.$axios({
+                     method: 'get',
+                        url: 'http://106.15.206.229/library/get/list'
+
+                 }).then((res) => {
+                 this.tableData=res.data
+                 this.handleCurrentChange(1);
+                 }).catch((error) => {
+
+                 console.log('调查获取失败');
+                 console.log(error.response.data);
+                 console.log(error.response.status);
+                 console.log(error.response.headers);
+                 console.log('Error', error.message);
+                 console.log(error.config);
+                 })
         }
     }
 </script>
@@ -246,7 +358,7 @@
     clear: both;
     margin-left: 40px;
 }
-.page {
+#page {
     /* border: 1px solid #000; */
     text-align: center;
     margin-top: 20px;

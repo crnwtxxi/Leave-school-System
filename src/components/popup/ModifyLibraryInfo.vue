@@ -62,7 +62,48 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                            console.log(this.ruleForm)
+                             this.$axios({
+                             method: 'post',
+                             url: 'http://106.15.206.229/library/update/'+this.ruleForm.id,
+                             withCredentials : true,
+                             data: {
+                             id:this.ruleForm.id,
+                             username:this.ruleForm.username,
+                             name:this.ruleForm.name,
+                             state:this.ruleForm.state,
+                             cost:this.ruleForm.cost,
+                             remark:this.ruleForm.remark
+                             },
+                             header: {
+                             'Content-Type': 'application/json;charset=UTF-8'
+                             }
+                             }).then((res) => {
+                             console.log('111');
+                             console.log(res);
+                             
+                             this.$notify({
+                             title: "修改成功",
+                             offset: 100,
+                             type: "success",
+                             showClose: false,
+                             duration: 1500
+                             });
+                             this.$emit('func');
+                            
+                             }).catch((error) => {
+                             this.$message({
+                             type: 'info',
+                             message: '修改失败，请重新尝试！'
+                             });
+
+                             console.log('失败');
+                             console.log(error.response.data);
+                             console.log(error.response.status);
+                             console.log(error.response.headers);
+                             console.log('Error', error.message);
+                             console.log(error.config);
+                             })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -77,6 +118,7 @@
         },
         mounted() {
             this.getRowMsg();
+           
         }
     }
 </script>
