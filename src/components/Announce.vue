@@ -38,6 +38,7 @@
                     console.log('111');
                     console.log(res);
                     this.announceDetail = res.data;
+                    this.announceDetail.content = filterXSS(this.announceDetail.content);
                 }).catch((error) => {
                     console.log('公告详情获取失败');
                     console.log(error.response.data);

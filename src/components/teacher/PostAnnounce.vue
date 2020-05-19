@@ -21,7 +21,7 @@
             <el-input v-model="ruleForm.title" class="title"></el-input>
           </el-form-item>
           <el-form-item label="公告内容" prop="content">
-              <mavon-editor
+            <mavon-editor
               :toolbars="toolbars"
               style="height:500px"
               :autofocus="false"
@@ -47,7 +47,7 @@ export default {
       ruleForm: {
         title: "",
         content: "",
-        html:""
+        html: ""
       },
       rules: {
         title: [
@@ -95,9 +95,9 @@ export default {
     };
   },
   methods: {
-    change(value, render){
-        // render 为 markdown 解析后的结果[html]
-        this.ruleForm.html = render;
+    change(value, render) {
+      // render 为 markdown 解析后的结果[html]
+      this.ruleForm.html = render;
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -119,8 +119,6 @@ export default {
           })
             .then(res => {
               console.log("111");
-              // console.log(res);
-
               this.$notify({
                 title: "公告发布成功",
                 message: "可以在首页公告栏处查看",

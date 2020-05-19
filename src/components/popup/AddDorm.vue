@@ -1,13 +1,16 @@
 <template>
     <div class="container">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="username">
-                <el-input v-model="ruleForm.username"></el-input>
+            <el-form-item label="用户名" prop="user_name">
+                <el-input v-model="ruleForm.user_name" placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item label="姓名" prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+                <el-input v-model="ruleForm.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
-            <el-form-item label="借书状态" prop="state">
+           <el-form-item label="寝室号" prop="location">
+                <el-input v-model="ruleForm.location" placeholder="请输入寝室号"></el-input>
+            </el-form-item>
+            <el-form-item label="后勤状态" prop="state">
                 <el-select v-model="ruleForm.state" placeholder="请选择">
                     <el-option
                         v-for="item in states"
@@ -15,12 +18,12 @@
                         :label="item.label"
                         :value="item.value">
                         <span style="float: left">{{ item.label }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                        <!-- <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span> -->
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="费用原因" prop="remark">
-                <el-input v-model="ruleForm.remark"></el-input>
+            <el-form-item label="备注" prop="remark">
+                <el-input v-model="ruleForm.remark" placeholder="请输入备注，如没有备注信息，请输入无"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
                 <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
@@ -38,16 +41,28 @@
                  states: [
                     {
                         value: '0',
-                        label: '不满足条件'
+                        label: '未完成'
                     },
                     {
                         value: '1',
-                        label: '满足条件'
+                        label: '已完成'
                     }
                 ],
                 ruleForm: {},
                 rules: {
-                   remark: [
+                    user_name:[
+                        {required: true, message: '请输入用户名', trigger: 'change'}
+                    ],
+                    name:[
+                        {required: true, message: '请输入姓名', trigger: 'change'}
+                    ],
+                    location:[
+                        {required: true, message: '请输入寝室号', trigger: 'change'}
+                    ],
+                    state:[
+                        {required: true, message: '请选择状态', trigger: 'change'}
+                    ],
+                    remark: [
                         { required: true, message: '请输入费用原因', trigger: 'change' }
                     ]
                 }
@@ -57,7 +72,36 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        this.$axios({
+                            method: "post",
+                            url: "/api/dorm/create",
+                            withCredentials: true,
+                            data: {
+                                user_name: this.ruleForm.user_name,
+                                name:this.ruleForm.name,
+                                location:this.ruleForm.location,
+                                state:this.ruleForm.state,
+                                remark:this.ruleForm.remark
+                            },
+                            header: {
+                                "Content-Type": "application/json;charset=UTF-8"
+                            }
+                        }).then(res => {
+                            console.log("添加后勤数据成功!");
+                            this.$message({
+                                type:'success',
+                                message:'学生数据添加成功!'
+                            });
+                            this.$parent.$parent.successAdd();
+                        }).catch(error => {
+                            if(error.response.status == '500'){
+                                this.$message({
+                                    type:'error',
+                                    message:'该学生的后勤处已存在/该学生存在，请重新上传！'
+                                });
+                                this.resetForm('ruleForm');
+                            }
+                        });
                     } else {
                         console.log('error submit!!');
                         return false;

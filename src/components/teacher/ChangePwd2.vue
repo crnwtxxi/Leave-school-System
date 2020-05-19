@@ -34,12 +34,12 @@
         data() {
             var validatePass = (rule, value, callback) => {
                 if (value === '') {
-                callback(new Error('请输入密码'));
+                    callback(new Error('请输入密码'));
                 } else {
                 if (this.ruleForm.checkPwd !== '') {
                     this.$refs.ruleForm.validateField('checkPwd');
                 }
-                callback();
+                    callback();
                 }
             };
             var validatePass2 = (rule, value, callback) => {
@@ -74,7 +74,32 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        this.$axios({
+                            method: "post",
+                            url: "/api/admin/modify/password",
+                            withCredentials: true,
+                            data: {
+                                additionalProp1: this.ruleForm.oldPwd,
+                                additionalProp2: this.ruleForm.pwd,
+                                additionalProp3: this.ruleForm.checkPwd
+                            },
+                            header: {
+                                "Content-Type": "application/json;charset=UTF-8"
+                            }
+                        }).then(res=>{
+                            this.resetForm('ruleForm');
+                            this.$message({
+                                type: 'success',
+                                 message: '修改密码成功'
+                            });
+                            this.$router.push('/login');
+                        }).catch(error=>{
+                            this.resetForm('ruleForm');
+                            this.$message({
+                                type: 'error',
+                                 message: '修改密码失败'
+                            });
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

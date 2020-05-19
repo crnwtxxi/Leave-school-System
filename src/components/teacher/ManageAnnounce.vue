@@ -12,7 +12,9 @@
       <div id="table">
         <el-table
           :data="tableViewData.filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase()))"
-          style="width: 100%" v-loading="loading"
+          style="width: 100%"
+          v-loading="loading"
+          stripe
         >
           <el-table-column label="公告标题" prop="title"></el-table-column>
           <el-table-column label="发表日期" prop="date"></el-table-column>
@@ -60,7 +62,7 @@ export default {
       currentPage: 1,
       // 每页公告的数量
       pageSize: 5,
-      loading:true
+      loading: true
     };
   },
   methods: {
@@ -104,19 +106,23 @@ export default {
                   return true;
                 }
               });
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
             })
             .catch(error => {
-              console.log("公告获取失败");
+              console.log("删除公告失败");
+              this.$message({
+                type: "error",
+                message: "请求错误，删除公告失败!"
+              });
               console.log(error.response.data);
               console.log(error.response.status);
               console.log(error.response.headers);
               console.log("Error", error.message);
               console.log(error.config);
             });
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
         })
         .catch(() => {
           this.$message({
@@ -150,7 +156,7 @@ export default {
     },
     // 获取公告列表
     getAnnounces() {
-        this.loading = true;
+      this.loading = true;
       this.$axios({
         method: "get",
         url: "/api/notice/get/list"
