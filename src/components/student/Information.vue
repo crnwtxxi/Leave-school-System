@@ -21,22 +21,22 @@
                         <el-input v-model="form.class" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="寝室号">
-                        <el-input v-model="form.location" :disabled="true"></el-input>
+                        <el-input v-model="form.dorm" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="姓名">
                         <el-input v-model="form.name" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="学号">
-                        <el-input v-model="form.username" :disabled="true"></el-input>
+                        <el-input v-model="form.id" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="性别">
                         <el-input v-model="form.sex" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="身份证号">
-                        <el-input v-model="form.card_id" :disabled="true"></el-input>
+                        <el-input v-model="form.cardid" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item style="text-align:center;">
-                        <el-button @click="verify" class="verify">确认</el-button>
+                        <el-button @click="verify" class="verify" v-if="!this.check">{{buttonText}}</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -52,16 +52,10 @@
     export default {
         data() {
             return {
-                form: {
-                    college: "计算机科学学院",
-                    major: "软件工程",
-                    class: "4班",
-                    location: "西3-106",
-                    name: "陈香伶",
-                    username: "2017110206",
-                    sex: "女",
-                    card_id: "12345619991022159X"
-                }
+                form: {},
+                userMsg: {},
+                check: "",
+                buttonText: ""
             }
         },
         methods: {
@@ -71,20 +65,83 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '信息核对成功！'
-                });
+                    this.$axios({
+                        method: 'post',
+                        url: '/api/student/checked/'+this.userMsg.username
+                    }).then((res) => {
+                        this.$message({
+                            type: 'success',
+                            message: '信息核对成功！'
+                        });
+                    }).catch((error) => {
+                        console.log('核对失败');
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers); 
+                        console.log('Error', error.message);
+                        console.log(error.config);
+                    })
                 }).catch(() => {
                     this.$message({
                         type: 'info',
                         message: '已取消核对！'
                     });          
                 });
+            },
+            //获取学生所有信息
+            getStudentInfo() {
+                this.$axios({
+                    method: 'get',
+                    url: '/api/student/info'
+                }).then((res) => {
+                    // console.log("hhhhhhhhhhh");
+                    console.log(res);
+                    this.form = res.data;
+                    if(res.data.sex=="1") {
+                        this.form.sex = '男'
+                    } else {
+                        this.form.sex = '女'
+                    }
+                    if(res.data.dorm=='true') {
+                        this.form.dorm = "无"
+                    }
+                }).catch((error) => {
+                    console.log('学生信息获取失败');
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers); 
+                    console.log('Error', error.message);
+                    console.log(error.config);
+                })
+            },
+            //获取当前用户信息
+            getUserInfo() {
+                var user = JSON.parse(sessionStorage.getItem('user'));
+                this.userMsg = user;
+            },
+            ifCheck() {
+                this.$axios({
+                    method: 'get',
+                    url: '/api/student/plan'
+                }).then((res) => {
+                    console.log("-------------------");
+                    console.log(res);
+                    this.check = res.data.student;
+                    sessionStorage.setItem('plan', JSON.stringify(res.data));
+                }).catch((error) => {
+                    console.log('学生核对情况获取失败');
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers); 
+                    console.log('Error', error.message);
+                    console.log(error.config);
+                })
             }
         },
-        components: {
-
+        mounted() {
+            this.getStudentInfo();
+            this.getUserInfo();
+            this.ifCheck();
         }
     }
 </script>
