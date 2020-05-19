@@ -53,6 +53,7 @@
                 }
             };
             return {
+                username: "",
                 ruleForm: {
                     oldPwd: '',
                     pwd: '',
@@ -75,7 +76,40 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        // alert('submit!');
+                        this.$axios({
+                            method: 'post',
+                            url: '/api/student/modify/password',
+                            withCredentials : true,
+                            data: {
+                                username: this.username,
+                                password: this.ruleForm.pwd,
+                                origin: this.ruleForm.oldPwd
+                            },
+                            header: {
+                                'Content-Type': 'application/json;charset=UTF-8'
+                            }
+                        }).then((res) => {
+                            // console.log('111');
+                            // console.log(res);
+                            this.resetForm('ruleForm');
+                            this.$notify({
+                                title: "密码修改成功",
+                                message: "请重新登录",
+                                offset: 100,
+                                type: "success",
+                                showClose: false,
+                                duration: 2000
+                            });
+                            this.$router.push('/login');
+                        }).catch((error) => {
+                            console.log('学生信息修改失败');
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers); 
+                            console.log('Error', error.message);
+                            console.log(error.config);
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -84,10 +118,14 @@
                 },
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
-                }
+                },
+                getStuMsg() {
+                    var user = JSON.parse(sessionStorage.getItem('user'));
+                    this.username = user.username;
+                },
             },
-            components: {
-
+            mounted() {
+                this.getStuMsg();
             }
     }
 </script>

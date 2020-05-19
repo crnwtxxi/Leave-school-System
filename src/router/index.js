@@ -65,9 +65,10 @@ import modifySuperInfo from '@/components/popup/ModifySuperInfo';
 import modifyOfficeInfo from '@/components/popup/ModifyOfficeInfo';
 import teannounce from '@/components/teacher/Announce';
 
+
 //暴露路由对象
 export default new Router({
-    routes: [
+    routes : [
         {
             path: '/',
             component: home
@@ -84,6 +85,11 @@ export default new Router({
             path: '/student',
             component: student,
             children: [
+                {
+                    path: '',
+                    name: '',
+                    component: changepwd
+                },
                 {
                     path: 'schedule',
                     name: 'schedule',
@@ -108,6 +114,11 @@ export default new Router({
             component: teacher,
             name: 'teacher',
             children: [
+                {
+                    path: '',
+                    name: '',
+                    component: changepwd2
+                },
                 {
                     path: 'changepwd2',
                     name: 'changepwd2',

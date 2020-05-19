@@ -41,7 +41,6 @@
                         </template>
                         <el-menu-item index="4-1" @click="toPostSurvey">发布调查</el-menu-item>
                         <el-menu-item index="4-2" @click="toManageSurvey">管理调查</el-menu-item>
-                        <el-menu-item index="4-3" @click="toConfigSurvey" :disabled="isSuper()">配置调查</el-menu-item>
                     </el-submenu>
                     <el-submenu index="5">
                         <template slot="title">

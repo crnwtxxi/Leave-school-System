@@ -106,7 +106,7 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('添加管理员失败');
+                            console.log('添加学生失败');
                             console.log(error.response.data);
                             console.log(error.response.status);
                             console.log(error.response.headers); 

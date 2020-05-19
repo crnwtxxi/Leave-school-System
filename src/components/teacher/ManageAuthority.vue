@@ -18,7 +18,7 @@
                 
                 <el-table
                     ref="filterTable"
-                    :data="tableData"
+                    :data="tableDataPage"
                     stripe
                     style="width: 100%"
                     class="table">
@@ -74,9 +74,10 @@
                     layout="prev, pager, next"
                     :total="this.tableData.length"
                     class="page"
-                    :page-count="this.tableData.length/10+1"
-                    :pager-count="9"
                     :hide-on-single-page="ifHide"
+                    :page-size="pageCount"
+                    :pager-count="5"
+                    :current-page.sync="currentPage"
                     @current-change="handleCurrentChange">
                 </el-pagination>
             </div>
@@ -113,10 +114,13 @@
     export default {
         data() {
             return {
-                ifHide: true,
+                ifHide: true,//当数据只有一页时隐藏页码
+                pageCount: 3,//每页显示多少条数据
+                currentPage: 1,//当前页数
                 modifyAdminInfo_dialogTableVisible: false,
                 addAdmin_dialogTableVisible: false,
                 tableData: [],
+                tableDataPage: [],
                 currentPage: 1,
                 tableViewData: []
             }
@@ -146,16 +150,17 @@
             handleDelete(index, row) {
                 console.log("点击了删除");
             },
+            //翻页
             handleCurrentChange(val) {
                 console.log(`当前 ${val} 页`);
                 this.currentPage = val;
-                this.tableViewData.splice(0, this.tableViewData.length);
-                for (
-                    var i = (this.currentPage - 1) * 10;
-                    i < this.currentPage * 10 && i < this.tableData.length;
+                this.tableDataPage.splice(0, this.tableDataPage.length);
+                for(
+                    var i = (this.currentPage -1)*this.pageCount;
+                    i<this.currentPage*this.pageCount&&i<this.tableData.length;
                     i++
-                ) {
-                    this.tableViewData.push(this.tableData[i]);
+                ){
+                    this.tableDataPage.push(this.tableData[i]);
                 }
             },
             closeAdd() {
@@ -174,6 +179,7 @@
                     console.log('获取成功');
                     console.log(res);
                     this.tableData = res.data;
+                    this.handleCurrentChange(1);
                 }).catch((error) => {
                     console.log('管理员列表获取失败');
                     console.log(error.response.data);
@@ -220,6 +226,7 @@
     /* border: 1px solid #000; */
     border-top: 1px solid rgba(204, 204, 204, 0.441);
     margin-top: 5px;
+    margin-bottom: 50px;
 }
 .page {
     /* border: 1px solid #000; */

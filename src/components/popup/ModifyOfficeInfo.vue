@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="70px" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="username">
-                <el-input v-model="ruleForm.username" disabled></el-input>
+            <el-form-item label="用户名" prop="user_name">
+                <el-input v-model="ruleForm.user_name" disabled></el-input>
             </el-form-item>
             <el-form-item label="姓名" prop="name">
                 <el-input v-model="ruleForm.name" disabled></el-input>
@@ -59,9 +59,9 @@
                 ],
                 ruleForm: {},
                 rules: {
-                    remark: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
-                    ]
+                    // remark: [
+                    //     { required: true, message: '请输入用户名', trigger: 'blur' }
+                    // ]
                 }
             };
         },
@@ -69,7 +69,40 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        // alert('submit!');
+                        this.$axios({
+                            method: 'post',
+                            url: '/api/office/update/'+this.ruleForm.id,
+                            withCredentials : true,
+                            data: {
+                                user_name: this.ruleForm.user_name,
+                                name: this.ruleForm.name,
+                                punish: this.ruleForm.punish,
+                                credit: this.ruleForm.credit,
+                                remark: this.ruleForm.remark
+                            },
+                            header: {
+                                'Content-Type': 'application/json;charset=UTF-8'
+                            }
+                        }).then((res) => {
+                            console.log('111');
+                            console.log(res);
+                            this.$notify({
+                                title: "学生信息修改成功",
+                                offset: 100,
+                                type: "success",
+                                showClose: false,
+                                duration: 1500
+                            });
+                            this.$emit('func');
+                        }).catch((error) => {
+                            console.log('学生信息修改失败');
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers); 
+                            console.log('Error', error.message);
+                            console.log(error.config);
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

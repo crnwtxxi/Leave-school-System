@@ -26,7 +26,7 @@
                 <el-input v-model="ruleForm.remark"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">立即添加</el-button>
                 <el-button @click="resetForm('ruleForm')">清空</el-button>
             </el-form-item>
         </el-form>
@@ -52,9 +52,6 @@
                 rules: {
                     cost: [
                         { required: true, message: '请输入费用', trigger: 'blur' }
-                    ],
-                    remark: [
-                        { required: true, message: '请输入费用原因', trigger: 'change' }
                     ]
                 }
             };
@@ -63,7 +60,49 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        // alert('submit!');
+                        this.$axios({
+                            method: 'post',
+                            url: '/api/finance/create',
+                            withCredentials : true,
+                            data: {
+                                username: this.ruleForm.username,
+                                name: this.ruleForm.name,
+                                state: this.ruleForm.state,
+                                cost: this.ruleForm.cost,
+                                remark: this.ruleForm.remark
+                            },
+                            header: {
+                                'Content-Type': 'application/json;charset=UTF-8'
+                            }
+                        }).then((res) => {
+                            console.log('111');
+                            console.log(res);
+                            this.$notify({
+                                title: "学生信息增加成功",
+                                offset: 100,
+                                type: "success",
+                                showClose: false,
+                                duration: 1500
+                            });
+                            this.$emit('func');
+                        }).catch((error) => {
+                            console.log('学生信息增加失败');
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers); 
+                            console.log('Error', error.message);
+                            console.log(error.config);
+                            this.$notify({
+                                title: "学生信息增加失败",
+                                message: '该学生的教务信息已经存在 / 该学生不存在，请重新上传',
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2500
+                            });
+                            this.resetForm('ruleForm');
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

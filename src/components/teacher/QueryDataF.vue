@@ -42,7 +42,7 @@
                     <el-divider></el-divider>
                     <el-table
                         ref="filterTable"
-                        :data="tableData"
+                        :data="tableDataPage"
                         stripe
                         style="width: 100%"
                         @selection-change="handleSelectionChange">
@@ -79,8 +79,8 @@
                             filter-placement="bottom-end">
                             <template slot-scope="scope">
                                 <el-tag
-                                :type="scope.row.state=='1' ? 'success' : 'error'"
-                                disable-transitions>{{scope.row.state}}</el-tag>
+                                :type="scope.row.state=='1' ? 'success' : 'warning'"
+                                disable-transitions>{{scope.row.state == '0'? '不满足条件':'满足条件'}}</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -95,8 +95,13 @@
                     </el-table>
                     <el-pagination
                         layout="prev, pager, next"
-                        :total="50"
-                        class="page">
+                        :total="this.tableData.length"
+                        class="page"
+                        :hide-on-single-page="ifHide"
+                        :page-size="pageCount"
+                        :pager-count="5"
+                        :current-page.sync="currentPage"
+                        @current-change="handleCurrentChange">
                     </el-pagination>
                 </div>
             </div>
@@ -111,7 +116,7 @@
             :lock-scroll="false" 
             width="500px"
             v-if="modifyFinanceInfo_dialogTableVisible">
-            <modifyFinanceInfo></modifyFinanceInfo>
+            <modifyFinanceInfo @func="closeModify"></modifyFinanceInfo>
         </el-dialog>
 
         <el-dialog 
@@ -120,7 +125,7 @@
             center :append-to-body='true' 
             :lock-scroll="false" 
             width="500px">
-            <addFinance></addFinance>
+            <addFinance @func="closeAdd"></addFinance>
         </el-dialog>
 
     </div>
@@ -132,35 +137,17 @@
     export default {
         data() {
             return {
+                ifHide: true,//当数据只有一页时隐藏页码
+                pageCount: 5,//每页显示多少条数据
+                currentPage: 1,//当前页数
                 modifyFinanceInfo_dialogTableVisible: false,
                 addFinance_dialogTableVisible: false,
                 ruleForm: {
                     username: "",
                     name: ""
                 },
-                tableData: [
-                    {
-                        username: "2017110206",
-                        name: "陈香伶",
-                        state: "0",
-                        cost: "200",
-                        remark: "教材费"
-                    },
-                    {
-                        username: "2017110206",
-                        name: "陈死狗",
-                        state: "1",
-                        cost: "300",
-                        remark: "教材费"
-                    },
-                    {
-                        username: "2017110206",
-                        name: "权志龙",
-                        state: "1",
-                        cost: "200",
-                        remark: "教材费"
-                    }
-                ],
+                tableData: [],
+                tableDataPage: [],
                 multipleSelection: []
             }
         },
@@ -195,11 +182,53 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
                 // console.log(val);
+            },
+            closeAdd() {
+                this.addFinance_dialogTableVisible = false;
+                this.getFinanceData();
+            },
+            closeModify() {
+                this.modifyFinanceInfo_dialogTableVisible = false;
+                this.getFinanceData();
+            },
+            getFinanceData() {
+                this.$axios({
+                    method: "get",
+                    url: "/api/finance/get/list"
+                }).then(res => {
+                    console.log("获取财务处数据成功!");
+                    console.log(res);
+                    this.tableData = res.data;
+                    this.handleCurrentChange(1);
+                }).catch(error => {
+                    console.log("财务处数据获取失败");
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                    console.log("Error", error.message);
+                    console.log(error.config);
+                });
+            },
+            //翻页
+            handleCurrentChange(val) {
+                console.log(`当前 ${val} 页`);
+                this.currentPage = val;
+                this.tableDataPage.splice(0, this.tableDataPage.length);
+                for(
+                    var i = (this.currentPage -1)*this.pageCount;
+                    i<this.currentPage*this.pageCount&&i<this.tableData.length;
+                    i++
+                ){
+                    this.tableDataPage.push(this.tableData[i]);
+                }
             }
         },
         components: {
             modifyFinanceInfo,
             addFinance
+        },
+        mounted() {
+            this.getFinanceData();
         }
     }
 </script>

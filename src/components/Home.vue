@@ -19,7 +19,8 @@
               layout="prev, pager, next"
               :total="this.announce.length"
               class="page"
-              :page-size="10"
+              :hide-on-single-page="ifHide"
+              :page-size="pageCount"
               :pager-count="5"
               :current-page.sync="currentPage"
               @current-change="handleCurrentChange">
@@ -50,6 +51,7 @@
 export default {
   data () {
     return {
+        ifHide: true,//当数据只有一页时隐藏页码
         pageCount: 10,//每页显示多少条数据
         currentPage: 1,//当前页数
         announce: [],//公告数据
@@ -91,14 +93,6 @@ export default {
           console.log('Error', error.message);
           console.log(error.config);
       })
-    },
-    showdate() {
-      this.currentPage = 1;
-      if(this.announce.length<=10){
-        this.announcePage = this.announce.splice(0,this.announce.length-1);
-      } else {
-        this.announcePage = this.announce.splice(0,9);
-      }
     },
     //翻页
     handleCurrentChange(val) {
