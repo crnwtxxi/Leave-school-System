@@ -9,14 +9,14 @@
         <div class="content">
             <h3>修改密码：</h3>
             <div class="form">
-                <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="70px" class="demo-ruleForm">
+                <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
                     <el-form-item label="原密码" prop="oldPwd">
                         <el-input type="password" v-model="ruleForm.oldPwd" autocomplete="off" show-password></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="pwd">
                         <el-input type="password" v-model="ruleForm.pwd" autocomplete="off" show-password></el-input>
                     </el-form-item>
-                    <el-form-item label="确认密码" prop="checkPwd">
+                    <el-form-item label="确认密码" prop="checkPwd" >
                         <el-input type="password" v-model="ruleForm.checkPwd" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item style="text-align:right;">
@@ -36,9 +36,9 @@
                 if (value === '') {
                     callback(new Error('请输入密码'));
                 } else {
-                if (this.ruleForm.checkPwd !== '') {
-                    this.$refs.ruleForm.validateField('checkPwd');
-                }
+                    if (this.ruleForm.checkPwd !== '') {
+                        this.$refs.ruleForm.validateField('checkPwd');
+                    }
                     callback();
                 }
             };
@@ -52,6 +52,7 @@
                 }
             };
             return {
+                username:'',
                 ruleForm: {
                     oldPwd: '',
                     pwd: '',
@@ -74,14 +75,17 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        console.log(this.username);
+                        console.log(this.ruleForm.pwd);
+                        console.log(this.ruleForm.oldPwd);
                         this.$axios({
                             method: "post",
                             url: "/api/admin/modify/password",
                             withCredentials: true,
                             data: {
-                                additionalProp1: this.ruleForm.oldPwd,
-                                additionalProp2: this.ruleForm.pwd,
-                                additionalProp3: this.ruleForm.checkPwd
+                                username: this.username,
+                                password: this.ruleForm.pwd,
+                                origin: this.ruleForm.oldPwd
                             },
                             header: {
                                 "Content-Type": "application/json;charset=UTF-8"
@@ -95,6 +99,7 @@
                             this.$router.push('/login');
                         }).catch(error=>{
                             this.resetForm('ruleForm');
+                            console.log(error);
                             this.$message({
                                 type: 'error',
                                  message: '修改密码失败'
@@ -108,7 +113,14 @@
                 },
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
+                },
+                getAdminMsg() {
+                    var user = JSON.parse(sessionStorage.getItem('user'));
+                    this.username = user.username;
                 }
+            },
+            mounted(){
+                this.getAdminMsg();
             },
             components: {
 
