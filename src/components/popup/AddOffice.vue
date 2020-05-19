@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="70px" class="demo-ruleForm">
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="用户名" prop="username">
                 <el-input v-model="ruleForm.username"></el-input>
             </el-form-item>
@@ -35,7 +35,7 @@
                 <el-input v-model="ruleForm.remark"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">立即添加</el-button>
                 <el-button @click="resetForm('ruleForm')">清空</el-button>
             </el-form-item>
         </el-form>
@@ -60,8 +60,11 @@
                 ],
                 ruleForm: {},
                 rules: {
-                    remark: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
+                    punish: [
+                        { required: true, message: '请选择处分状态', trigger: 'change' }
+                    ],
+                    credit: [
+                        { required: true, message: '请选择学分状态', trigger: 'change' }
                     ]
                 }
             };
@@ -70,7 +73,49 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        // alert('submit!');
+                        this.$axios({
+                            method: 'post',
+                            url: '/api/office/create',
+                            withCredentials : true,
+                            data: {
+                                user_name: this.ruleForm.user_name,
+                                name: this.ruleForm.name,
+                                punish: this.ruleForm.punish,
+                                credit: this.ruleForm.credit,
+                                remark: this.ruleForm.remark
+                            },
+                            header: {
+                                'Content-Type': 'application/json;charset=UTF-8'
+                            }
+                        }).then((res) => {
+                            console.log('111');
+                            console.log(res);
+                            this.$notify({
+                                title: "学生信息增加成功",
+                                offset: 100,
+                                type: "success",
+                                showClose: false,
+                                duration: 1500
+                            });
+                            this.$emit('func');
+                        }).catch((error) => {
+                            console.log('学生信息增加失败');
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers); 
+                            console.log('Error', error.message);
+                            console.log(error.config);
+                            this.$notify({
+                                title: "学生信息增加失败",
+                                message: '该学生的教务信息已经存在 / 该学生不存在，请重新上传',
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2500
+                            });
+                            this.resetForm('ruleForm');
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

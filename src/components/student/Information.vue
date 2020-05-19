@@ -119,5 +119,6 @@
     /* border: 1px solid #000; */
     margin-left: 40px;
     font-size: 14px;
+    margin-bottom: 20px;
 }
 </style>

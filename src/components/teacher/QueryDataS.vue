@@ -42,7 +42,7 @@
                     <el-divider></el-divider>
                     <el-table
                         ref="filterTable"
-                        :data="tableData"
+                        :data="tableDataPage"
                         stripe
                         style="width: 100%"
                         class="table"
@@ -118,8 +118,13 @@
                     </el-table>
                     <el-pagination
                         layout="prev, pager, next"
-                        :total="50"
-                        class="page">
+                        :total="this.tableData.length"
+                        class="page"
+                        :hide-on-single-page="ifHide"
+                        :page-size="pageCount"
+                        :pager-count="5"
+                        :current-page.sync="currentPage"
+                        @current-change="handleCurrentChange">
                     </el-pagination>
                 </div>
             </div>
@@ -156,6 +161,9 @@
     export default {
         data() {
             return {
+                ifHide: true,//当数据只有一页时隐藏页码
+                pageCount: 5,//每页显示多少条数据
+                currentPage: 1,//当前页数
                 modifySuperInfo_dialogTableVisible: false,
                 addStudent_dialogTableVisible: false,
                 ruleForm: {
@@ -163,6 +171,7 @@
                     name: ""
                 },
                 tableData: [],
+                tableDataPage: [],
                 multipleSelection: []
             }
         },
@@ -214,6 +223,7 @@
                     console.log('获取成功');
                     console.log(res);
                     this.tableData = res.data;
+                    this.handleCurrentChange(1);
                 }).catch((error) => {
                     console.log('学生列表获取失败');
                     console.log(error.response.data);
@@ -222,6 +232,19 @@
                     console.log('Error', error.message);
                     console.log(error.config);
                 })
+            },
+            //翻页
+            handleCurrentChange(val) {
+                console.log(`当前 ${val} 页`);
+                this.currentPage = val;
+                this.tableDataPage.splice(0, this.tableDataPage.length);
+                for(
+                    var i = (this.currentPage -1)*this.pageCount;
+                    i<this.currentPage*this.pageCount&&i<this.tableData.length;
+                    i++
+                ){
+                    this.tableDataPage.push(this.tableData[i]);
+                }
             }
         },
         components: {
@@ -277,6 +300,9 @@
     text-align: center;
     margin-top: 20px;
     margin-bottom: 20px;
+}
+.table {
+    margin-bottom: 50px;
 }
 
 

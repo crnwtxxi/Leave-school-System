@@ -66,6 +66,7 @@ import modifySuperInfo from '@/components/popup/ModifySuperInfo';
 import modifyOfficeInfo from '@/components/popup/ModifyOfficeInfo';
 import teannounce from '@/components/teacher/Announce';
 
+
 //暴露路由对象
 export default new Router({
   routes: [{
@@ -84,92 +85,104 @@ export default new Router({
       path: '/student',
       component: student,
       children: [{
-        path: 'schedule',
-        name: 'schedule',
-        component: schedule
-      }, {
-        path: 'information',
-        name: 'information',
-        component: information
-      }, {
-        path: 'changepwd',
-        name: 'changepwd',
-        component: changepwd
-      }, {
-        path: 'surveylist',
-        name: 'surveylist',
-        component: surveylist
-      },{
-          path:'survey',
-          name:'survey',
-          component:survey
-      }]
+          path: '',
+          name: '',
+          component: changepwd
+        },
+        {
+          path: 'schedule',
+          name: 'schedule',
+          component: schedule
+        }, {
+          path: 'information',
+          name: 'information',
+          component: information
+        }, {
+          path: 'changepwd',
+          name: 'changepwd',
+          component: changepwd
+        }, {
+          path: 'surveylist',
+          name: 'surveylist',
+          component: surveylist
+        },{
+            path:'survey',
+            name:'survey',
+            component:survey
+        }
+      ]
     },
     {
       path: '/teacher',
       component: teacher,
       name: 'teacher',
       children: [{
-        path: 'changepwd2',
-        name: 'changepwd2',
-        component: changepwd2
-      }, {
-        path: 'uploaddata',
-        name: 'uploaddata',
-        component: uploaddata
-      }, {
-        path: 'querydataS',
-        name: 'querydataS',
-        component: querydataS
-      }, {
-        path: 'querydataO',
-        name: 'querydataO',
-        component: querydataO
-      }, {
-        path: 'querydataF',
-        name: 'querydataF',
-        component: querydataF
-      }, {
-        path: 'querydataL',
-        name: 'querydataL',
-        component: querydataL
-      }, {
-        path: 'querydataD',
-        name: 'querydataD',
-        component: querydataD
-      }, {
-        path: 'statistic',
-        name: 'statistic',
-        component: statistic
-      }, {
-        path: 'postsurvey',
-        name: 'postsurvey',
-        component: postsurvey
-      }, {
-        path: 'managesurvey',
-        name: 'managesurvey',
-        component: managesurvey
-      }, {
-        path: 'configsurvey',
-        name: 'configsurvey',
-        component: configsurvey
-      }, {
-        path: 'postannounce',
-        name: 'postannounce',
-        component: postannounce
-      }, {
-        path: 'manageannounce',
-        name: 'manageannounce',
-        component: manageannounce
-      }, {
-        path: 'manageauthority',
-        name: 'manageauthority',
-        component: manageauthority
-      }, {
-        path: 'teannounce',
-        name: 'teannounce',
-        component: teannounce
-      }]
+          path: '',
+          name: '',
+          component: changepwd2
+        },
+        {
+          path: 'changepwd2',
+          name: 'changepwd2',
+          component: changepwd2
+        }, {
+          path: 'uploaddata',
+          name: 'uploaddata',
+          component: uploaddata
+        }, {
+          path: 'querydataS',
+          name: 'querydataS',
+          component: querydataS
+        }, {
+          path: 'querydataO',
+          name: 'querydataO',
+          component: querydataO
+        }, {
+          path: 'querydataF',
+          name: 'querydataF',
+          component: querydataF
+        }, {
+          path: 'querydataL',
+          name: 'querydataL',
+          component: querydataL
+        }, {
+          path: 'querydataD',
+          name: 'querydataD',
+          component: querydataD
+        }, {
+          path: 'statistic',
+          name: 'statistic',
+          component: statistic
+        }, {
+          path: 'postsurvey',
+          name: 'postsurvey',
+          component: postsurvey
+        }, {
+          path: 'managesurvey',
+          name: 'managesurvey',
+          component: managesurvey
+        }, {
+          path: 'configsurvey',
+          name: 'configsurvey',
+          component: configsurvey
+        }, {
+          path: 'postannounce',
+          name: 'postannounce',
+          component: postannounce
+        }, {
+          path: 'manageannounce',
+          name: 'manageannounce',
+          component: manageannounce
+        }, {
+          path: 'manageauthority',
+          name: 'manageauthority',
+          component: manageauthority
+        }, {
+          path: 'teannounce',
+          name: 'teannounce',
+          component: teannounce
+        }
+      ]
     },
     {
       path: '/modifyAdminInfo',

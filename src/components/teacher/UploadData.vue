@@ -207,9 +207,17 @@
                     console.log("调上传文件的接口");
                     var formData = new FormData();
                     formData.append('file', this.fileList[0]);
-                    this.$axios.post("http://106.15.206.229/"+this.uploadRole+"/upload", formData)
+                    this.$axios.post("/api/"+this.uploadRole+"/upload", formData)
                     .then((res) => {
+                        // console.log("上传成功");
                         console.log(res);
+                        this.$notify({
+                            title: '文件上传成功',
+                            offset: 100,
+                            type: 'success',
+                            showClose: false,
+                            duration: 1500
+                        });
                     }).catch((error) => {
                         console.log('上传失败');
                         console.log(error.response.data);

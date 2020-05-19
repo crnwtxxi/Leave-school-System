@@ -12,31 +12,31 @@
             <div class="progress">
                 <div class="pro pro1">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.info" :status="status.info"></el-progress>
+                        <el-progress type="circle" :percentage="percentages.info" :color="colors.info"></el-progress>
                         <p>核对个人信息</p>
                     </div>
                 </div>
                 <div class="pro pro2">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.jwc" :status="status.jwc"></el-progress>
+                        <el-progress type="circle" :percentage="percentages.jwc"></el-progress>
                         <p>教务处</p>
                     </div>
                 </div>
                 <div class="pro pro3">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.finance"  :status="status.finance"></el-progress>
+                        <el-progress type="circle" :percentage="percentages.finance"></el-progress>
                         <p>财务处</p>
                     </div>
                 </div>
                 <div class="pro pro4">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.library"  :status="status.library"></el-progress>
+                        <el-progress type="circle" :percentage="percentages.library"></el-progress>
                         <p>图书馆</p>
                     </div>
                 </div>
                 <div class="pro pro5">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.service"  :status="status.service"></el-progress>
+                        <el-progress type="circle" :percentage="percentages.service"></el-progress>
                         <p>后勤处</p>
                     </div>
                 </div>
@@ -50,9 +50,9 @@
         data() {
             return {
                 percentage: 20,
-                status: {
-                    info: 'success',
-                    jwc: 'warning',
+                colors: {
+                    info: '#f56c6c',
+                    jwc: 'exception',
                     finance: '',
                     library: '',
                     service: ''
@@ -67,9 +67,6 @@
             }
         },
         methods: {
-
-        },
-        components: {
 
         }
     }
