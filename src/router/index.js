@@ -21,7 +21,7 @@ Vue.prototype.$xss = xss
 //防止访问重复路由报错
 const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
-    return routerPush.call(this, location).catch(error => error)
+  return routerPush.call(this, location).catch(error => error)
 }
 
 //引入路由组件
@@ -34,6 +34,7 @@ import schedule from '@/components/student/Schedule';
 import information from '@/components/student/Information';
 import changepwd from '@/components/student/ChangePwd';
 import surveylist from '@/components/student/SurveyList';
+import survey from '@/components/student/Survey';
 //teacher组件
 import teacher from '@/components/teacher/TeaMain';
 import changepwd2 from '@/components/teacher/ChangePwd2';
@@ -68,167 +69,168 @@ import teannounce from '@/components/teacher/Announce';
 
 //暴露路由对象
 export default new Router({
-    routes : [
-        {
-            path: '/',
-            component: home
+  routes: [{
+      path: '/',
+      component: home
+    },
+    {
+      path: '/login',
+      component: login
+    },
+    {
+      path: '/announce',
+      name: 'announce',
+      component: announce
+    }, {
+      path: '/student',
+      component: student,
+      children: [{
+          path: '',
+          name: '',
+          component: changepwd
         },
         {
-            path: '/login',
-            component: login
-        },
-        {
-            path: '/announce',
-            name: 'announce',
-            component: announce
+          path: 'schedule',
+          name: 'schedule',
+          component: schedule
         }, {
-            path: '/student',
-            component: student,
-            children: [
-                {
-                    path: '',
-                    name: '',
-                    component: changepwd
-                },
-                {
-                    path: 'schedule',
-                    name: 'schedule',
-                    component: schedule
-                }, {
-                    path: 'information',
-                    name: 'information',
-                    component: information
-                }, {
-                    path: 'changepwd',
-                    name: 'changepwd',
-                    component: changepwd
-                }, {
-                    path: 'surveylist',
-                    name: 'surveylist',
-                    component: surveylist
-                }
-            ]
-        },
-        {
-            path: '/teacher',
-            component: teacher,
-            name: 'teacher',
-            children: [
-                {
-                    path: '',
-                    name: '',
-                    component: changepwd2
-                },
-                {
-                    path: 'changepwd2',
-                    name: 'changepwd2',
-                    component: changepwd2
-                }, {
-                    path: 'uploaddata',
-                    name: 'uploaddata',
-                    component: uploaddata
-                }, {
-                    path: 'querydataS',
-                    name: 'querydataS',
-                    component: querydataS
-                }, {
-                    path: 'querydataO',
-                    name: 'querydataO',
-                    component: querydataO
-                }, {
-                    path: 'querydataF',
-                    name: 'querydataF',
-                    component: querydataF
-                }, {
-                    path: 'querydataL',
-                    name: 'querydataL',
-                    component: querydataL
-                }, {
-                    path: 'querydataD',
-                    name: 'querydataD',
-                    component: querydataD
-                }, {
-                    path: 'statistic',
-                    name: 'statistic',
-                    component: statistic
-                }, {
-                    path: 'postsurvey',
-                    name: 'postsurvey',
-                    component: postsurvey
-                }, {
-                    path: 'managesurvey',
-                    name: 'managesurvey',
-                    component: managesurvey
-                }, {
-                    path: 'configsurvey',
-                    name: 'configsurvey',
-                    component: configsurvey
-                }, {
-                    path: 'postannounce',
-                    name: 'postannounce',
-                    component: postannounce
-                }, {
-                    path: 'manageannounce',
-                    name: 'manageannounce',
-                    component: manageannounce
-                }, {
-                    path: 'manageauthority',
-                    name: 'manageauthority',
-                    component: manageauthority
-                },{
-                    path:'teannounce',
-                    name:'teannounce',
-                    component:teannounce
-                }
-            ]
-        },
-        {
-            path: '/modifyAdminInfo',
-            component: modifyAdminInfo
-        },
-        {
-            path: '/addAdmin',
-            component: addAdmin
-        },
-        {
-            path: '/modifyLibraryInfo',
-            component: modifyLibraryInfo
-        },
-        {
-            path: '/addLibrary',
-            component: addLibrary
-        },
-        {
-            path: '/modifyFinanceInfo',
-            component: modifyFinanceInfo
-        },
-        {
-            path: '/addFinance',
-            component: addFinance
-        },
-        {
-            path: '/modifyDormInfo',
-            component: modifyDormInfo
-        },
-        {
-            path: '/addDorm',
-            component: addDorm
-        },
-        {
-            path: '/modifySuperInfo',
-            component: modifySuperInfo
-        },
-        {
-            path: '/addStudent',
-            component: addStudent
-        },
-        {
-            path: '/modifyOfficeInfo',
-            component: modifyOfficeInfo
-        },
-        {
-            path: '/addOffice',
-            component: addOffice
+          path: 'information',
+          name: 'information',
+          component: information
+        }, {
+          path: 'changepwd',
+          name: 'changepwd',
+          component: changepwd
+        }, {
+          path: 'surveylist',
+          name: 'surveylist',
+          component: surveylist
+        },{
+            path:'survey',
+            name:'survey',
+            component:survey
         }
-    ]
+      ]
+    },
+    {
+      path: '/teacher',
+      component: teacher,
+      name: 'teacher',
+      children: [{
+          path: '',
+          name: '',
+          component: changepwd2
+        },
+        {
+          path: 'changepwd2',
+          name: 'changepwd2',
+          component: changepwd2
+        }, {
+          path: 'uploaddata',
+          name: 'uploaddata',
+          component: uploaddata
+        }, {
+          path: 'querydataS',
+          name: 'querydataS',
+          component: querydataS
+        }, {
+          path: 'querydataO',
+          name: 'querydataO',
+          component: querydataO
+        }, {
+          path: 'querydataF',
+          name: 'querydataF',
+          component: querydataF
+        }, {
+          path: 'querydataL',
+          name: 'querydataL',
+          component: querydataL
+        }, {
+          path: 'querydataD',
+          name: 'querydataD',
+          component: querydataD
+        }, {
+          path: 'statistic',
+          name: 'statistic',
+          component: statistic
+        }, {
+          path: 'postsurvey',
+          name: 'postsurvey',
+          component: postsurvey
+        }, {
+          path: 'managesurvey',
+          name: 'managesurvey',
+          component: managesurvey
+        }, {
+          path: 'configsurvey',
+          name: 'configsurvey',
+          component: configsurvey
+        }, {
+          path: 'postannounce',
+          name: 'postannounce',
+          component: postannounce
+        }, {
+          path: 'manageannounce',
+          name: 'manageannounce',
+          component: manageannounce
+        }, {
+          path: 'manageauthority',
+          name: 'manageauthority',
+          component: manageauthority
+        }, {
+          path: 'teannounce',
+          name: 'teannounce',
+          component: teannounce
+        }
+      ]
+    },
+    {
+      path: '/modifyAdminInfo',
+      component: modifyAdminInfo
+    },
+    {
+      path: '/addAdmin',
+      component: addAdmin
+    },
+    {
+      path: '/modifyLibraryInfo',
+      component: modifyLibraryInfo
+    },
+    {
+      path: '/addLibrary',
+      component: addLibrary
+    },
+    {
+      path: '/modifyFinanceInfo',
+      component: modifyFinanceInfo
+    },
+    {
+      path: '/addFinance',
+      component: addFinance
+    },
+    {
+      path: '/modifyDormInfo',
+      component: modifyDormInfo
+    },
+    {
+      path: '/addDorm',
+      component: addDorm
+    },
+    {
+      path: '/modifySuperInfo',
+      component: modifySuperInfo
+    },
+    {
+      path: '/addStudent',
+      component: addStudent
+    },
+    {
+      path: '/modifyOfficeInfo',
+      component: modifyOfficeInfo
+    },
+    {
+      path: '/addOffice',
+      component: addOffice
+    }
+  ]
 })

@@ -8,35 +8,34 @@
         </div>
         <div class="content">
             <h3>离校手续办理进度：</h3>
-            <el-progress :percentage="percentage" color="#276E51" style="margin-left: 100px;margin-right: 100px;margin-top: 50px;"></el-progress>
             <div class="progress">
                 <div class="pro pro1">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.info" :color="colors.info"></el-progress>
+                        <el-progress type="circle" :percentage="transPercent(this.percentages.student)"></el-progress>
                         <p>核对个人信息</p>
                     </div>
                 </div>
                 <div class="pro pro2">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.jwc"></el-progress>
+                        <el-progress type="circle" :percentage="transPercent(this.percentages.office)"></el-progress>
                         <p>教务处</p>
                     </div>
                 </div>
                 <div class="pro pro3">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.finance"></el-progress>
+                        <el-progress type="circle" :percentage="transPercent(this.percentages.finance)"></el-progress>
                         <p>财务处</p>
                     </div>
                 </div>
                 <div class="pro pro4">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.library"></el-progress>
+                        <el-progress type="circle" :percentage="transPercent(this.percentages.library)"></el-progress>
                         <p>图书馆</p>
                     </div>
                 </div>
                 <div class="pro pro5">
                     <div>
-                        <el-progress type="circle" :percentage="percentages.service"></el-progress>
+                        <el-progress type="circle" :percentage="transPercent(this.percentages.dorm)"></el-progress>
                         <p>后勤处</p>
                     </div>
                 </div>
@@ -49,25 +48,36 @@
     export default {
         data() {
             return {
-                percentage: 20,
-                colors: {
-                    info: '#f56c6c',
-                    jwc: 'exception',
-                    finance: '',
-                    library: '',
-                    service: ''
-                },
-                percentages: {
-                    info: 100,
-                    jwc: 75,
-                    finance: 0,
-                    library: 0,
-                    service: 0
-                }
+                percentages: {}
             }
         },
         methods: {
-
+            //获取进度
+            getSchedule() {
+                var plan = JSON.parse(sessionStorage.getItem('plan'));
+                this.percentages = plan;
+                // this.percentages.student = this.transPercent(plan.student);
+                // this.percentages.office = this.transPercent(plan.office);
+                // this.percentages.library = this.transPercent(plan.library);
+                // this.percentages.finance = this.transPercent(plan.finance);
+                // this.percentages.dorm = this.transPercent(plan.dorm);
+            },
+            transPercent(value) {
+                // console.log(value)
+                if(value) {
+                    return 100
+                } else {
+                    return 0
+                }
+            },
+            setPercentColor(per) {
+                if(per=='100') {
+                    return '276E51'
+                }
+            }
+        },
+        mounted() {
+            this.getSchedule();
         }
     }
 </script>
@@ -90,6 +100,7 @@
 .progress {
     /* border: 1px solid #000; */
     margin-top: 70px;
+    /* margin-bottom: 100px; */
 }
 .progress .pro {
     /* border: 1px solid red; */
