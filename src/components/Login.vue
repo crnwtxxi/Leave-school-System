@@ -96,7 +96,7 @@ export default {
               }
             }).then((res) => {
               // console.log('111');
-              // console.log(res);
+              console.log(res);
               var role = res.data.role;
               console.log("登陆成功");
               this.roleName = role;
@@ -115,6 +115,16 @@ export default {
               console.log(error.response.headers); 
               console.log('Error', error.message);
               console.log(error.config);
+              if(error.response.status==401) {
+                this.$notify({
+                    title: "登陆失败",
+                    message: "用户名或密码错误 / 或者验证码错误，请重新登录",
+                    offset: 100,
+                    type: "error",
+                    showClose: false,
+                    duration: 2000
+                });
+              }
             })
           } else {
             console.log('error submit!!');
