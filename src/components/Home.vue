@@ -112,8 +112,6 @@ export default {
                 method: 'get',
                 url: '/api/notice/get/list'
             }).then((res) => {
-                console.log(res);
-                console.log(res.data.length)
                 res.data.forEach(element => {
                     if(element.valid == true){
                         this.announce.push(element);
@@ -121,17 +119,14 @@ export default {
                 });
                 this.handleCurrentChange(1);
             }).catch((error) => {
-                console.log('公告获取失败');
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers); 
-                console.log('Error', error.message);
-                console.log(error.config);
+                this.$message({
+                        type: "error",
+                        message: "请求错误，获取公告失败！"
+                    });
             })
         },
         //翻页
         handleCurrentChange(val) {
-            console.log(`当前 ${val} 页`);
             this.currentPage = val;
             this.announcePage.splice(0, this.announcePage.length);
             for(
