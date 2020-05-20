@@ -56,10 +56,10 @@
         },
         methods: {
             handleOpen(key, keyPath) {
-                console.log(key, keyPath);
+                // console.log(key, keyPath);
             },
             handleClose(key, keyPath) {
-                console.log(key, keyPath);
+                // console.log(key, keyPath);
             },
             toInformation() {
                 this.$router.push('/student/information')
@@ -152,7 +152,6 @@
     position: absolute;
     width: 200px;
     height: 100%;
-    /* border-right: 1px solid rgba(133, 130, 130, 0.5); */
     box-shadow: 6px 5px 15px #ccc;
 }
 .component {

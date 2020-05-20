@@ -37,6 +37,58 @@
     import Vue from 'vue'
     export default {
         data() {
+            var checkCardid = (rule, value, callback) => {
+                var inputPattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                if (!value) {
+                    return callback(new Error('身份证不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的身份证号'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var checkUsername = (rule, value, callback) => {
+                var inputPattern = /^\d{10}$/;
+                if (!value) {
+                    return callback(new Error('学号不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的学号'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var checkChinese = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]/;
+                if (!value) {
+                    return callback(new Error('不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请正确输入,只能输入中文'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var checkClass = (rule, value, callback) => {
+                var inputPattern = /^\d{1,2}$/;
+                if (!value) {
+                    return callback(new Error('班级不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的数字，长度为1-2'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
             return {
                 ruleForm: {
                     username: "",
@@ -49,23 +101,23 @@
                 },
                 rules: {
                     username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
+                        { validator: checkUsername, trigger: 'blur' }
                     ],
                     name: [
                         { required: true, message: '请输入名字', trigger: 'blur' },
                         { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
                     ],
                     card_id: [
-                        { required: true, message: '请输入身份证', trigger: 'blur' }
+                        { validator: checkCardid, trigger: 'blur' }
                     ],
                     college: [
-                        { required: true, message: '请输入学院', trigger: 'blur' }
+                        { validator: checkChinese, trigger: 'blur' }
                     ],
                     major: [
-                        { required: true, message: '请输入专业', trigger: 'blur' }
+                        { validator: checkChinese, trigger: 'blur' }
                     ],
                     class: [
-                        { required: true, message: '请输入班级', trigger: 'blur' }
+                        { validator: checkClass, trigger: 'blur' }
                     ]
                 }
             };
@@ -95,10 +147,8 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            console.log('111');
-                            console.log(res);
                             this.$notify({
-                                title: "学生信息修改成功",
+                                title: "学生信息添加成功",
                                 offset: 100,
                                 type: "success",
                                 showClose: false,
@@ -106,15 +156,24 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('添加学生失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                            this.$notify({
+                                title: "学生信息添加失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
+                            });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                 });

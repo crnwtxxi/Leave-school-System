@@ -42,7 +42,8 @@
                         { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
                     ],
                     password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' }
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                        { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
                     ],
                     rolename: [
                         { required: true, message: '请选择一个角色', trigger: 'change' }
@@ -54,8 +55,6 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // console.log(this.ruleForm.username+this.ruleForm.name+this.ruleForm.password+this.ruleForm.rolename);
-                        // alert('submit!');
                         this.$axios({
                             method: 'post',
                             url: '/api/admin/update',
@@ -70,34 +69,41 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            console.log('111');
-                            console.log(res);
                             this.$notify({
                                 title: "管理员修改成功",
                                 offset: 100,
                                 type: "success",
                                 showClose: false,
-                                duration: 1500
+                                duration: 2000
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('管理员修改失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                            this.$notify({
+                                title: "学生信息修改失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
+                            });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                 });
             },
+            //获得该行数据
             getRowMsg() {
                 var JsonStr = sessionStorage.getItem('rowAdminMsg');
                 this.ruleForm = JSON.parse(JsonStr);
-                // console.log(this.ruleForm.name);
             }
         },
         mounted() {

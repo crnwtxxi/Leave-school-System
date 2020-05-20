@@ -8,48 +8,18 @@
             </el-breadcrumb>
         </div>
         <div class="content">
-            <h3>查看数据：</h3>
+            <h3>
+                查看数据：
+                <el-button type="primary" size="mini" @click="handleAdd()">增加<i class="el-icon-upload el-icon--right"></i></el-button>    
+            </h3>
             <div class="data">
-                <div class="head clearfix">
-                    <div class="delete">
-                        <el-button type="primary" size="mini" @click="handleAdd()">增加<i class="el-icon-upload el-icon--right"></i>
-                        </el-button>
-                        <el-button type="danger" size="mini" @click="handleDelete()">删除<i class="el-icon-delete el-icon--right"></i></el-button>
-                    </div>
-                    <div class="query">
-                        <el-form :model="ruleForm" ref="ruleForm" label-width="70px" class="demo-ruleForm">
-                            <el-row>
-                                <el-col :span="8">
-                                    <el-form-item label="学号" prop="username">
-                                        <el-input v-model="ruleForm.username"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-form-item label="姓名" prop="name">
-                                        <el-input v-model="ruleForm.name"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-form-item>
-                                        <el-button type="primary" @click="onQuery" style="margin-left:-20px;">立即查询</el-button>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                        </el-form>
-                    </div>
-                </div>
                 <div class="manage">
                     <el-divider></el-divider>
                     <el-table
                         ref="filterTable"
                         :data="tableDataPage"
                         stripe
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange">
-                        <el-table-column
-                            type="selection"
-                            width="55">
-                        </el-table-column>
+                        style="width: 100%">
                         <el-table-column
                             prop="username"
                             label="用户名"
@@ -90,6 +60,9 @@
                                 size="mini"
                                 type="primary"
                                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                                <el-button
+                                size="mini"
+                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -147,14 +120,10 @@
                     name: ""
                 },
                 tableData: [],
-                tableDataPage: [],
-                multipleSelection: []
+                tableDataPage: []
             }
         },
         methods: {
-            onQuery() {
-                console.log("提交查询")
-            },
             resetDateFilter() {
                 this.$refs.filterTable.clearFilter('date');
             },
@@ -169,19 +138,35 @@
                 return row[property] === value;
             },
             handleEdit(index, row) {
-                console.log(index, row);
                 sessionStorage.setItem('rowFinanceMsg', JSON.stringify(row));
                 this.modifyFinanceInfo_dialogTableVisible = true;
             },
             handleAdd() {
                 this.addFinance_dialogTableVisible = true;
             },
-            handleDelete() {
-                console.log("点击了删除");
-            },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-                // console.log(val);
+            handleDelete(index, row) {
+                this.$axios({
+                    method: 'get',
+                    url: '/api/finance/del/'+row.id
+                }).then((res) => {
+                    this.$notify({
+                        title: "该条学生数据删除成功",
+                        offset: 100,
+                        type: "success",
+                        showClose: false,
+                        duration: 1500
+                    });
+                    this.getFinanceData();
+                }).catch((error) => {
+                    this.$notify({
+                        title: "该条学生数据删除失败",
+                        message: "请重试",
+                        offset: 100,
+                        type: "error",
+                        showClose: false,
+                        duration: 2000
+                    });
+                })
             },
             closeAdd() {
                 this.addFinance_dialogTableVisible = false;
@@ -196,22 +181,28 @@
                     method: "get",
                     url: "/api/finance/get/list"
                 }).then(res => {
-                    console.log("获取财务处数据成功!");
-                    console.log(res);
+                    this.$notify({
+                        title: "财务处数据获取成功",
+                        offset: 100,
+                        type: "success",
+                        showClose: false,
+                        duration: 2000
+                    });
                     this.tableData = res.data;
                     this.handleCurrentChange(1);
                 }).catch(error => {
-                    console.log("财务处数据获取失败");
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                    console.log("Error", error.message);
-                    console.log(error.config);
+                    this.$notify({
+                        title: "财务处数据获取失败",
+                        message: "请重试",
+                        offset: 100,
+                        type: "error",
+                        showClose: false,
+                        duration: 2000
+                    });
                 });
             },
             //翻页
             handleCurrentChange(val) {
-                console.log(`当前 ${val} 页`);
                 this.currentPage = val;
                 this.tableDataPage.splice(0, this.tableDataPage.length);
                 for(
@@ -252,19 +243,6 @@
     position: absolute;
     /* border: 1px solid #000; */
     width: 100%;
-}
-.delete {
-    /* border: 1px solid #000; */
-    float: left;
-    margin-left: 40px;
-    margin-top: 10px;
-}
-.query {
-    /* border: 1px solid #000; */
-    /* position: absolute; */
-    width: 600px;
-    margin-right: 0;
-    float: right;
 }
 .manage{
     /* border: 1px solid red; */
