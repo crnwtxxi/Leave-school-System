@@ -16,7 +16,7 @@
                         </el-button>
                         <el-button type="danger" size="mini" @click="handleDelete()">删除<i class="el-icon-delete el-icon--right"></i></el-button>
                     </div>
-                    <div class="query">
+                    <!-- <div class="query">
                         <el-form :model="ruleForm" ref="ruleForm" label-width="70px" class="demo-ruleForm">
                             <el-row>
                                 <el-col :span="8">
@@ -36,7 +36,7 @@
                                 </el-col>
                             </el-row>
                         </el-form>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="manage">
                     <el-divider></el-divider>
@@ -142,10 +142,10 @@
             return {
                 modifyDormInfo_dialogTableVisible: false,
                 addDorm_dialogTableVisible: false,
-                ruleForm: {
-                    username: "",
-                    name: ""
-                },
+                // ruleForm: {
+                //     username: "",
+                //     name: ""
+                // },
                 tableData: [
                     
                 ],
