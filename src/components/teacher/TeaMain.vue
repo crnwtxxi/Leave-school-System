@@ -50,7 +50,7 @@
                         <el-menu-item index="5-1" @click="toPostAnnounce">发布公告</el-menu-item>
                         <el-menu-item index="5-2" @click="toManageAnnounce">管理公告</el-menu-item>
                     </el-submenu>
-                    <el-menu-item index="6" :disabled="isSuper()">
+                    <el-menu-item index="6" v-if="isSuper()">
                         <i class="el-icon-collection-tag"></i>
                         <span slot="title" @click="toManageAuthority">权限管理</span>
                     </el-menu-item>
@@ -130,9 +130,9 @@
             //方法
             isSuper() {
                 if(this.userMsg.role == 'super') {
-                    return false
-                } else {
                     return true
+                } else {
+                    return false
                 }
             },
             getRoleName() {
