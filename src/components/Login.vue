@@ -36,8 +36,6 @@
             </el-form-item>
         </el-form>
     </div>
-    <!-- <el-button @click="toStudent">学生系统入口</el-button>
-    <el-button @click="toTeacher">管理员系统入口</el-button> -->
     <el-button @click="toHome">返回首页</el-button>
   </div>
 </template>
@@ -45,6 +43,7 @@
 <script>
 import Vue from 'vue'
 export default {
+  inject:['reload'], 
   data () {
     return {
         url: {
@@ -58,6 +57,7 @@ export default {
             captcha: ''
         },
         rules: {
+          //验证
           username: [
             { required: true, message: '请输入用户名', trigger: 'blur' }
           ],
@@ -72,7 +72,6 @@ export default {
           ]
         },
         role: "super",
-        // super   dorm library finance office
         roleName: ""
     }
   },
@@ -80,7 +79,6 @@ export default {
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            // alert('submit!');
             this.$axios({
               method: 'post',
               url: '/api/login',
@@ -95,13 +93,15 @@ export default {
                   'Content-Type': 'application/json;charset=UTF-8'
               }
             }).then((res) => {
-              // console.log('111');
-              console.log(res);
               var role = res.data.role;
-              console.log("登陆成功");
+              this.$notify({
+                    title: "登陆成功",
+                    offset: 100,
+                    type: "success",
+                    showClose: false,
+                    duration: 2000
+                });
               this.roleName = role;
-              // sessionStorage.setItem("roleName",role);
-              // console.log(res.data.content);
               sessionStorage.setItem('user', JSON.stringify(res.data));
               if(this.roleName == 'student') {
                 this.$router.push('/student');
@@ -109,12 +109,6 @@ export default {
                 this.$router.push('/teacher');
               }
             }).catch((error) => {
-              console.log('登陆失败');
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers); 
-              console.log('Error', error.message);
-              console.log(error.config);
               if(error.response.status==401) {
                 this.$notify({
                     title: "登陆失败",
@@ -124,33 +118,36 @@ export default {
                     showClose: false,
                     duration: 2000
                 });
+                this.reload();//刷新页面
               }
             })
           } else {
-            console.log('error submit!!');
+            this.$notify({
+                title: "表单提交失败",
+                message: "请重试",
+                offset: 100,
+                type: "error",
+                showClose: false,
+                duration: 2000
+            });
             return false;
           }
         });
     },
+    //清空表单
     resetForm(formName) {
         this.$refs[formName].resetFields();
     },
-    toStudent() {
-        this.$router.push('/student');
-    },
-    toTeacher() {
-      sessionStorage.setItem("role",this.role);
-      this.$router.push('/teacher');
-      // this.$router.push({ name: 'teacher', params: {irole: this.role} });
-    },
+    //返回首页
     toHome() {
         this.$router.push('/');
     },
+    //请求验证码
     reqCode() {
       return "/api/captcha.jpg";
     },
+    //看不清，换一张
     changeCode() {
-      console.log("change code");
       var flag = this.code;
       if(flag) {
         this.code = false;
@@ -167,11 +164,6 @@ export default {
 .login_container {
     position: absolute;
     width: 100%;
-    /* background-image: url(~@/assets/bg3.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat; */
-    /* border: 2px solid #000; */
-    /* height: 100%; */
     background-color: #F2F2F2;
 }
 .login {

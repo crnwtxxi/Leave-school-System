@@ -126,33 +126,38 @@
             }
         },
         methods: {
+            //重置筛选
             resetDateFilter() {
                 this.$refs.filterTable.clearFilter('date');
             },
+            //清楚筛选
             clearFilter() {
                 this.$refs.filterTable.clearFilter();
             },
+            //筛选标签
             filterTag(value, row) {
                 return row.valid === value;
             },
+            //过滤处理
             filterHandler(value, row, column) {
                 const property = column['property'];
                 return row[property] === value;
             },
+            //编辑
             handleEdit(index, row) {
-                console.log(index, row);
                 sessionStorage.setItem('rowAdminMsg', JSON.stringify(row));
                 this.modifyAdminInfo_dialogTableVisible = true;
             },
+            //增加
             handleAdd() {
                 this.addAdmin_dialogTableVisible = true;
             },
+            //删除
             handleDelete(index, row) {
                 console.log("点击了删除");
             },
             //翻页
             handleCurrentChange(val) {
-                console.log(`当前 ${val} 页`);
                 this.currentPage = val;
                 this.tableDataPage.splice(0, this.tableDataPage.length);
                 for(
@@ -171,22 +176,30 @@
                 this.modifyAdminInfo_dialogTableVisible = false;
                 this.getAllAdmin();
             },
+            //获取管理员列表
             getAllAdmin() {
                 this.$axios({
                     method: 'get',
                     url: '/api/admin/get/all'
                 }).then((res) => {
-                    console.log('获取成功');
-                    console.log(res);
+                    this.$notify({
+                        title: "管理员列表获取成功",
+                        offset: 100,
+                        type: "success",
+                        showClose: false,
+                        duration: 2000
+                    });
                     this.tableData = res.data;
                     this.handleCurrentChange(1);
                 }).catch((error) => {
-                    console.log('管理员列表获取失败');
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers); 
-                    console.log('Error', error.message);
-                    console.log(error.config);
+                    this.$notify({
+                        title: "管理员列表获取失败",
+                        message: "请重试",
+                        offset: 100,
+                        type: "error",
+                        showClose: false,
+                        duration: 2000
+                    });
                 })
             }
         },

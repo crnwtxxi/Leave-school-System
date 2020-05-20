@@ -35,11 +35,6 @@
                 </div>
                 <div class="right">
                     <el-divider content-position="left">表头格式</el-divider>
-                    <!-- <div class="format">
-                        <el-image
-                            :src="require('@/assets/format.png')" alt="Load Failed">
-                        </el-image>
-                    </div> -->
                     <el-table :data="tableDataOffice" border style="width: 100%;" v-if="office">
                         <el-table-column prop="username" label="用户名" width="150"></el-table-column>
                         <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
@@ -76,7 +71,6 @@
                         <el-table-column prop="college" label="学院" width="150"></el-table-column>
                         <el-table-column prop="major" label="专业" width="150"></el-table-column>
                         <el-table-column prop="clazz" label="班级" width="150"></el-table-column>
-                        <el-table-column prop="location" label="寝室" width="150"></el-table-column>
                     </el-table>
                 </div>
             </div>
@@ -131,8 +125,7 @@
                     cardid: "123456199912234567",
                     college: "计算机科学学院",
                     major: "软件工程",
-                    clazz: "4",
-                    location: "西三-106"
+                    clazz: "4"
                 }]
             }
         },
@@ -153,14 +146,10 @@
             },
             // 文件状态改变时的钩子
             fileChange(file, fileList) {
-                console.log(file.raw);
                 this.fileList.push(file.raw) ;
-                console.log(this.fileList);
             },
             // 上传文件之前的钩子, 参数为上传的文件,若返回 false 或者返回 Promise 且被 reject，则停止上传
             beforeUploadFile(file) {
-                console.log('before upload');
-                console.log(file);
                 let extension = file.name.substring(file.name.lastIndexOf('.')+1);
                 let size = file.size / 1024 / 1024;
                 if(extension !== 'xlsx') {
@@ -204,13 +193,10 @@
                         duration: 1500
                     });
                 } else {
-                    console.log("调上传文件的接口");
                     var formData = new FormData();
                     formData.append('file', this.fileList[0]);
                     this.$axios.post("/api/"+this.uploadRole+"/upload", formData)
                     .then((res) => {
-                        // console.log("上传成功");
-                        console.log(res);
                         this.$notify({
                             title: '文件上传成功',
                             offset: 100,
@@ -219,12 +205,14 @@
                             duration: 1500
                         });
                     }).catch((error) => {
-                        console.log('上传失败');
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers); 
-                        console.log('Error', error.message);
-                        console.log(error.config);
+                        this.$notify({
+                            title: "文件上传失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                     })
                 }
             },

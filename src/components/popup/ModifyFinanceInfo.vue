@@ -36,6 +36,33 @@
     import Vue from 'vue'
     export default {
         data() {
+            var checkCost = (rule, value, callback) => {
+                var inputPattern = /^-?(([0-9]*(\.[0-9]{1,2})$)|([0-9]+$))/;
+                if (!value) {
+                    return callback(new Error('费用不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的数字'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var checkChinese = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]/;
+                if(!value) {
+                    callback();
+                } else {
+                    setTimeout(() => {
+                        if (!inputPattern.test(value)) {
+                            callback(new Error('请正确输入,只能输入中文'));
+                        } else {
+                            callback();
+                        }
+                    }, 1000);
+                }
+            };
             return {
                 states: [
                     {
@@ -50,7 +77,10 @@
                 ruleForm: {},
                 rules: {
                     cost: [
-                        { required: true, message: '请输入费用', trigger: 'blur' }
+                        { validator: checkCost, trigger: 'blur' }
+                    ],
+                    remark: [
+                        { validator: checkChinese, trigger: 'blur' }
                     ]
                 }
             };
@@ -59,7 +89,6 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // alert(this.ruleForm.remark);
                         this.$axios({
                             method: 'post',
                             url: '/api/finance/update/'+this.ruleForm.id,
@@ -75,8 +104,6 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            console.log('111');
-                            console.log(res);
                             this.$notify({
                                 title: "学生信息修改成功",
                                 offset: 100,
@@ -86,27 +113,35 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('学生信息修改失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                            this.$notify({
+                                title: "学生信息修改失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
+                            });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                 });
             },
+            //获得该行数据
             getRowMsg() {
                 var JsonStr = sessionStorage.getItem('rowFinanceMsg');
                 this.ruleForm = JSON.parse(JsonStr);
-                console.log(this.ruleForm.name);
             }
         },
         mounted() {
-            // console.log("更新");
             this.getRowMsg();
         }
     }

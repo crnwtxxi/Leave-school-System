@@ -18,7 +18,6 @@
                         :label="item.label"
                         :value="item.value">
                         <span style="float: left">{{ item.label }}</span>
-                        <!-- <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span> -->
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -37,6 +36,46 @@
     import Vue from 'vue'
     export default {
         data() {
+            var user_name = (rule, value, callback) => {
+                var inputPattern = /^20\d{8}$/
+                 setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的学号'));
+                    } else {
+                        callback();
+                    }         
+                }, 500);
+            };
+            var name = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]{2,6}/
+                 setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的名字'));
+                    } else {
+                        callback();
+                    }         
+                }, 500);
+            };
+            var location = (rule, value, callback) => {
+                var inputPattern = /^\d{1}-\d{3}$/
+                 setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的寝室号'));
+                    } else {
+                        callback();
+                    }         
+                }, 100);
+            };
+            var remark = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]{1,10}/
+                 setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入10个以内的中文字符'));
+                    } else {
+                        callback();
+                    }         
+                }, 100);
+            };
             return {
                  states: [
                     {
@@ -51,19 +90,23 @@
                 ruleForm: {},
                 rules: {
                     user_name:[
-                        {required: true, message: '请输入用户名', trigger: 'change'}
+                        {required: true, message: '请输入用户名', trigger: 'change'},
+                        {validator: user_name, trigger: 'change'}
                     ],
                     name:[
-                        {required: true, message: '请输入姓名', trigger: 'change'}
+                        {required: true, message: '请输入姓名', trigger: 'change'},
+                        {validator: name, trigger: 'change'}
                     ],
                     location:[
-                        {required: true, message: '请输入寝室号', trigger: 'change'}
+                        {required: true, message: '请输入寝室号', trigger: 'change'},
+                        {validator: location, trigger: 'change'}
                     ],
                     state:[
                         {required: true, message: '请选择状态', trigger: 'change'}
                     ],
                     remark: [
-                        { required: true, message: '请输入费用原因', trigger: 'change' }
+                        { required: true, message: '请输入备注', trigger: 'change' },
+                        {validator: remark, trigger: 'change'}
                     ]
                 }
             };
@@ -87,7 +130,6 @@
                                 "Content-Type": "application/json;charset=UTF-8"
                             }
                         }).then(res => {
-                            console.log("添加后勤数据成功!");
                             this.$message({
                                 type:'success',
                                 message:'学生数据添加成功!'
@@ -103,8 +145,10 @@
                             }
                         });
                     } else {
-                        console.log('error submit!!');
-                        return false;
+                        this.$message({
+                            type:'error',
+                            message:'提交数据失败，请重新提交！'
+                        });
                     }
                 });
             },

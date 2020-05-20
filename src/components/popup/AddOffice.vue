@@ -47,6 +47,33 @@
     import Vue from 'vue'
     export default {
         data() {
+            var checkUsername = (rule, value, callback) => {
+                var inputPattern = /^\d{10}$/;
+                if (!value) {
+                    return callback(new Error('学号不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的学号'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var checkChinese = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]/;
+                if(!value) {
+                    callback();
+                } else {
+                    setTimeout(() => {
+                        if (!inputPattern.test(value)) {
+                            callback(new Error('请正确输入,只能输入中文'));
+                        } else {
+                            callback();
+                        }
+                    }, 1000);
+                }
+            };
             return {
                 states: [
                     {
@@ -60,11 +87,21 @@
                 ],
                 ruleForm: {},
                 rules: {
+                    username: [
+                        { validator: checkUsername, trigger: 'blur' }
+                    ],
+                    name: [
+                        { required: true, message: '请输入名字', trigger: 'blur' },
+                        { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
+                    ],
                     punish: [
                         { required: true, message: '请选择处分状态', trigger: 'change' }
                     ],
                     credit: [
                         { required: true, message: '请选择学分状态', trigger: 'change' }
+                    ],
+                    remark: [
+                        { validator: checkChinese, trigger: 'blur' }
                     ]
                 }
             };
@@ -73,7 +110,6 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // alert('submit!');
                         this.$axios({
                             method: 'post',
                             url: '/api/office/create',
@@ -89,8 +125,6 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            console.log('111');
-                            console.log(res);
                             this.$notify({
                                 title: "学生信息增加成功",
                                 offset: 100,
@@ -100,24 +134,25 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('学生信息增加失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
                             this.$notify({
                                 title: "学生信息增加失败",
                                 message: '该学生的教务信息已经存在 / 该学生不存在，请重新上传',
                                 offset: 100,
                                 type: "error",
                                 showClose: false,
-                                duration: 2500
+                                duration: 2000
                             });
                             this.resetForm('ruleForm');
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                 });

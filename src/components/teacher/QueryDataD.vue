@@ -16,27 +16,6 @@
                         </el-button>
                         <el-button type="danger" size="mini" @click="handleDelete()">删除<i class="el-icon-delete el-icon--right"></i></el-button>
                     </div>
-                    <div class="query">
-                        <el-form :model="ruleForm" ref="ruleForm" label-width="70px" class="demo-ruleForm">
-                            <el-row>
-                                <el-col :span="8">
-                                    <el-form-item label="学号" prop="username">
-                                        <el-input v-model="ruleForm.username"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-form-item label="姓名" prop="name">
-                                        <el-input v-model="ruleForm.name"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-form-item>
-                                        <el-button type="primary" @click="onQuery" style="margin-left:-20px;">立即查询</el-button>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                        </el-form>
-                    </div>
                 </div>
                 <div class="manage">
                     <el-divider></el-divider>
@@ -98,9 +77,14 @@
                         </el-table-column>
                     </el-table>
                     <el-pagination
-                        layout="prev, pager, next"
-                        :total="50"
-                        class="page">
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[5,10,15,20]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        class="page"
+                        :total="tableDataCount">
                     </el-pagination>
                 </div>
             </div>
@@ -137,20 +121,39 @@
             return {
                 modifyDormInfo_dialogTableVisible: false,
                 addDorm_dialogTableVisible: false,
-                ruleForm: {
-                    username: "",
-                    name: ""
-                },
                 tableData: [
                     
                 ],
-                multipleSelection: []
+                tableAllData:[
+
+                ],
+                tablefilterData:[
+
+                ],
+                multipleSelection: [],
+                // 当前的页码
+                currentPage: 1,
+                // 每页数据的数量
+                pageSize: 5,
+                //总的数据
+                tableDataCount: 0,
             }
         },
         methods: {
-            // 查询的方法
-            onQuery() {
-                console.log("提交查询")
+            handleSizeChange(val){
+                this.pageSize = val;
+                this.handleCurrentChange(1);
+            },
+            handleCurrentChange(val){
+                this.currentPage = val;
+                this.tableData.splice(0, this.tableData.length);
+                for (
+                    var i = (this.currentPage - 1) * this.pageSize;
+                    i < this.currentPage * this.pageSize && i < this.tableDataCount;
+                    i++
+                ) {
+                    this.tableData.push(this.tableAllData[i]);
+                }
             },
             resetDateFilter() {
                 this.$refs.filterTable.clearFilter('date');
@@ -166,7 +169,6 @@
                 return row[property] === value;
             },
             handleEdit(index, row) {
-                console.log(index, row);
                 sessionStorage.setItem('rowDormMsg', JSON.stringify(row));
                 this.modifyDormInfo_dialogTableVisible = true;
             },
@@ -174,7 +176,45 @@
                 this.addDorm_dialogTableVisible = true;
             },
             handleDelete() {
-                console.log("点击了删除");
+                this.$confirm("此操作将永久删除选中的学生, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                    center: true
+                }).then(() => {
+                    this.multipleSelection.forEach(element => {
+                        this.handleReqDelete(element.id,element.name);
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: "info",
+                        message: "已取消删除"
+                    });
+                });
+            },
+            handleReqDelete(id,name){
+                this.$axios({
+                    method: "get",
+                    url: "/api/dorm/remove/" + id
+                }).then(res => {
+                    this.tableAllData.some((item, index) => {
+                        if (item.id == id) {
+                            this.tableAllData.splice(index, 1);
+                            this.tableDataCount = this.tableDataCount - 1;
+                            return true;
+                        }
+                    });
+                    this.$message({
+                        type: "success",
+                        message: "删除学生"+name+"成功!"
+                    });
+                    this.handleCurrentChange(1);
+                }).catch(error => {
+                    this.$message({
+                        type: "error",
+                        message: "请求错误，删除"+name+"学生失败!"
+                    });
+                });
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -184,16 +224,18 @@
                 method: "get",
                 url: "/api/dorm/get/list"
                 }).then(res => {
-                    console.log("获取后勤数据成功!");
-                    console.log(res);
-                    this.tableData = res.data;
+                    this.$message({
+                        type: "success",
+                        message: "获取后勤数据成功!"
+                    });
+                    this.tableAllData = res.data;
+                    this.tableDataCount = this.tableAllData.length;
+                    this.handleCurrentChange(1);
                 }).catch(error => {
-                    console.log("后勤数据获取失败");
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                    console.log("Error", error.message);
-                    console.log(error.config);
+                    this.$message({
+                        type: "error",
+                        message: "请求错误，获取后勤数据失败!"
+                    });
                 });
             },
             successAdd(){
@@ -201,13 +243,11 @@
                 this.getDormInfo();
             },
             successEdit(){
-                console.log('修改成功函数被调用!');
                 this.modifyDormInfo_dialogTableVisible = false;
                 this.getDormInfo();
             }
         },
         mounted() {
-            console.log("调用加载函数成功!");
             this.getDormInfo();
         },
         components: {
@@ -223,6 +263,7 @@
  *是有作用域的，其包含的样式只作用于当前组件
  */
 .locat {
+    /* 当前位置的定位 */
     position: absolute;
     top: 20px;
     left: 40px;
@@ -234,17 +275,17 @@
     top: 70px;
 }
 .content h3 {
+    /* 主要内容的定位 */
     margin-left: 40px;
 }
 .data {
-    /* position: absolute; */
-    /* border: 1px solid #000; */
+    /* 表格内容的定位 */
     width: 80%;
     height: 100%;
     margin: 0 auto;
 }
 .delete {
-    /* border: 1px solid #000; */
+    /* 增加和删除按钮的定位 */
     float: left; 
     margin-top: 10px;
 }
@@ -256,12 +297,9 @@
     float: right;
 }
 .manage{
-    /* border: 1px solid red; */
     clear: both;
-    /* margin-left: 40px; */
 }
 .page {
-    /* border: 1px solid #000; */
     text-align: center;
     margin-top: 20px;
     margin-bottom: 20px;

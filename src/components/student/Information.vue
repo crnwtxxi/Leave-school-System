@@ -59,6 +59,7 @@
             }
         },
         methods: {
+            //点击核对
             verify() {
                 this.$confirm('此操作为确认信息无误, 确认后将不可更改，是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -69,23 +70,31 @@
                         method: 'post',
                         url: '/api/student/checked/'+this.userMsg.username
                     }).then((res) => {
-                        this.$message({
-                            type: 'success',
-                            message: '信息核对成功！'
+                        this.$notify({
+                            title: "信息核对成功",
+                            offset: 100,
+                            type: "success",
+                            showClose: false,
+                            duration: 2000
                         });
                     }).catch((error) => {
-                        console.log('核对失败');
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers); 
-                        console.log('Error', error.message);
-                        console.log(error.config);
+                        this.$notify({
+                            title: "信息核对失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                     })
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消核对！'
-                    });          
+                    this.$notify({
+                        title: "取消核对",
+                        offset: 100,
+                        type: "warning",
+                        showClose: false,
+                        duration: 1500
+                    });        
                 });
             },
             //获取学生所有信息
@@ -94,8 +103,13 @@
                     method: 'get',
                     url: '/api/student/info'
                 }).then((res) => {
-                    // console.log("hhhhhhhhhhh");
-                    console.log(res);
+                    this.$notify({
+                        title: "学生信息获取成功",
+                        offset: 100,
+                        type: "success",
+                        showClose: false,
+                        duration: 2000
+                    });
                     this.form = res.data;
                     if(res.data.sex=="1") {
                         this.form.sex = '男'
@@ -106,12 +120,14 @@
                         this.form.dorm = "无"
                     }
                 }).catch((error) => {
-                    console.log('学生信息获取失败');
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers); 
-                    console.log('Error', error.message);
-                    console.log(error.config);
+                    this.$notify({
+                        title: "学生信息获取失败",
+                        message: "请重试",
+                        offset: 100,
+                        type: "error",
+                        showClose: false,
+                        duration: 2000
+                    });
                 })
             },
             //获取当前用户信息
@@ -119,29 +135,37 @@
                 var user = JSON.parse(sessionStorage.getItem('user'));
                 this.userMsg = user;
             },
+            //获取学生核对情况  是否核对
             ifCheck() {
                 this.$axios({
                     method: 'get',
                     url: '/api/student/plan'
                 }).then((res) => {
-                    console.log("-------------------");
-                    console.log(res);
+                    this.$notify({
+                        title: "学生核对情况获取成功",
+                        offset: 100,
+                        type: "success",
+                        showClose: false,
+                        duration: 2000
+                    });
                     this.check = res.data.student;
                     sessionStorage.setItem('plan', JSON.stringify(res.data));
                 }).catch((error) => {
-                    console.log('学生核对情况获取失败');
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers); 
-                    console.log('Error', error.message);
-                    console.log(error.config);
+                    this.$notify({
+                        title: "学生核对情况获取失败",
+                        message: "请重试",
+                        offset: 100,
+                        type: "error",
+                        showClose: false,
+                        duration: 2000
+                    });
                 })
             }
         },
         mounted() {
-            this.getStudentInfo();
-            this.getUserInfo();
-            this.ifCheck();
+            this.getStudentInfo();//获取学生个人信息
+            this.getUserInfo();//获取用户信息
+            this.ifCheck();//获取当前用户信息核对情况
         }
     }
 </script>

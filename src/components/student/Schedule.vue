@@ -56,14 +56,9 @@
             getSchedule() {
                 var plan = JSON.parse(sessionStorage.getItem('plan'));
                 this.percentages = plan;
-                // this.percentages.student = this.transPercent(plan.student);
-                // this.percentages.office = this.transPercent(plan.office);
-                // this.percentages.library = this.transPercent(plan.library);
-                // this.percentages.finance = this.transPercent(plan.finance);
-                // this.percentages.dorm = this.transPercent(plan.dorm);
             },
+            //转换进度
             transPercent(value) {
-                // console.log(value)
                 if(value) {
                     return 100
                 } else {
@@ -100,7 +95,6 @@
 .progress {
     /* border: 1px solid #000; */
     margin-top: 70px;
-    /* margin-bottom: 100px; */
 }
 .progress .pro {
     /* border: 1px solid red; */

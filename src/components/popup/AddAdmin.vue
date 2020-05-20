@@ -7,12 +7,6 @@
             <el-form-item label="姓名" prop="name">
                 <el-input v-model="ruleForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="ruleForm.password" show-password></el-input>
-            </el-form-item>
-            <el-form-item label="是否有效" prop="valid">
-                <el-switch v-model="ruleForm.valid" active-text="有效"></el-switch>
-            </el-form-item>
             <el-form-item label="角色" prop="rolename">
                 <el-radio-group v-model="ruleForm.rolename">
                     <el-radio label="office">教务处</el-radio>
@@ -33,24 +27,32 @@
 <script>
     export default {
         data() {
+            var checkUsername = (rule, value, callback) => {
+                var inputPattern = /^\d{10}$/;
+                if (!value) {
+                    return callback(new Error('学号不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的学号'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
             return {
                 ruleForm: {
                     username: '',
                     name: '',
-                    password: '',
-                    rolename: '',
-                    valid: true
+                    rolename: ''
                 },
                 rules: {
                     username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
+                        { validator: checkUsername, trigger: 'blur' }
                     ],
                     name: [
                         { required: true, message: '请输入名字', trigger: 'blur' },
                         { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
-                    ],
-                    password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' }
                     ],
                     rolename: [
                         { required: true, message: '请选择一个角色', trigger: 'change' }
@@ -62,7 +64,6 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // alert('submit!');
                         this.$axios({
                             method: 'post',
                             url: '/api/admin/create',
@@ -70,15 +71,13 @@
                             data: {
                                 username: this.ruleForm.username,
                                 realname: this.ruleForm.name,
-                                password: this.ruleForm.password,
+                                password: '123456',
                                 role: this.ruleForm.rolename
                             },
                             header: {
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            // console.log('111');
-                            // console.log(res);
                             this.$notify({
                                 title: "管理员添加成功",
                                 offset: 100,
@@ -88,15 +87,24 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('添加管理员失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                            this.$notify({
+                                title: "添加管理员失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
+                            });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                 });

@@ -46,6 +46,20 @@
     import Vue from 'vue'
     export default {
         data() {
+            var checkChinese = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]/;
+                if(!value) {
+                    callback();
+                } else {
+                    setTimeout(() => {
+                        if (!inputPattern.test(value)) {
+                            callback(new Error('请正确输入,只能输入中文'));
+                        } else {
+                            callback();
+                        }
+                    }, 1000);
+                }
+            };
             return {
                 states: [
                     {
@@ -59,9 +73,9 @@
                 ],
                 ruleForm: {},
                 rules: {
-                    // remark: [
-                    //     { required: true, message: '请输入用户名', trigger: 'blur' }
-                    // ]
+                    remark: [
+                        { validator: checkChinese, trigger: 'blur' }
+                    ]
                 }
             };
         },
@@ -69,7 +83,6 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // alert('submit!');
                         this.$axios({
                             method: 'post',
                             url: '/api/office/update/'+this.ruleForm.id,
@@ -85,8 +98,6 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            console.log('111');
-                            console.log(res);
                             this.$notify({
                                 title: "学生信息修改成功",
                                 offset: 100,
@@ -96,15 +107,24 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('学生信息修改失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                            this.$notify({
+                                title: "学生信息修改失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
+                            });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                 });
@@ -112,10 +132,10 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             },
+            //获得该行数据
             getRowMsg() {
                 var JsonStr = sessionStorage.getItem('rowOfficeMsg');
                 this.ruleForm = JSON.parse(JsonStr);
-                console.log(this.ruleForm.name);
             }
         },
         mounted() {

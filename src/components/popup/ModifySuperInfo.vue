@@ -39,42 +39,79 @@
     import Vue from 'vue'
     export default {
         data() {
+            var checkCardid = (rule, value, callback) => {
+                var inputPattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                if (!value) {
+                    return callback(new Error('身份证不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的身份证号'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var checkChinese = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]/;
+                if (!value) {
+                    return callback(new Error('不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请正确输入,只能输入中文'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var checkClass = (rule, value, callback) => {
+                var inputPattern = /^\d{1,2}$/;
+                if (!value) {
+                    return callback(new Error('班级不能为空'));
+                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入正确的数字，长度为1-2'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
             return {
                 ruleForm: {},
                 rules: {
-                    username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
-                    ],
                     realname: [
                         { required: true, message: '请输入名字', trigger: 'blur' },
                         { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
                     ],
                     password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' }
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                        { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
                     ],
                     cardid: [
-                        { required: true, message: '请输入身份证', trigger: 'blur' }
+                        { validator: checkCardid, trigger: 'blur' }
                     ],
                     college: [
-                        { required: true, message: '请输入学院', trigger: 'blur' }
+                        { validator: checkChinese, trigger: 'blur' }
                     ],
                     major: [
-                        { required: true, message: '请输入专业', trigger: 'blur' }
+                        {validator: checkChinese, trigger: 'blur' }
                     ],
                     clazz: [
-                        { required: true, message: '请输入班级', trigger: 'blur' }
+                        { validator: checkClass, trigger: 'blur' }
                     ],
                     sex: [
-                        { required: true, message: '请选择性别', trigger: 'blur' }
+                        { required: true, message: '请选择性别', trigger: 'change' }
                     ]
                 }
             };
         },
         methods: {
+            //提交修改表单
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        // alert('submit!');
                         this.$axios({
                             method: 'post',
                             url: '/api/student/update',
@@ -94,8 +131,6 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            console.log('111');
-                            console.log(res);
                             this.$notify({
                                 title: "学生信息修改成功",
                                 offset: 100,
@@ -105,26 +140,34 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                            console.log('学生信息修改失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                            this.$notify({
+                                title: "学生信息修改失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
+                            });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                 });
             },
+            //获取这一行的信息
             getRowMsg() {
                 var JsonStr = sessionStorage.getItem('rowSuperMsg');
                 this.ruleForm = JSON.parse(JsonStr);
-                console.log("sex:"+this.ruleForm.sex);
             }
         },
-        // props: ['rowMsg'],
         mounted() {
             this.getRowMsg();
         }

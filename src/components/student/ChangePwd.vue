@@ -34,14 +34,17 @@
     export default {
         data() {
             var validatePass = (rule, value, callback) => {
-                if (value === '') {
-                callback(new Error('请输入密码'));
-                } else {
-                if (this.ruleForm.checkPwd !== '') {
-                    this.$refs.ruleForm.validateField('checkPwd');
+                var inputPattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+                if (!value) {
+                    return callback(new Error('身份证不能为空'));
                 }
-                callback();
-                }
+                setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('密码至少包含 数字和英文，长度6-20，请重新输入'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
             };
             var validatePass2 = (rule, value, callback) => {
                 if (value === '') {
@@ -90,8 +93,6 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            // console.log('111');
-                            // console.log(res);
                             this.resetForm('ruleForm');
                             this.$notify({
                                 title: "密码修改成功",
@@ -103,15 +104,24 @@
                             });
                             this.$router.push('/login');
                         }).catch((error) => {
-                            console.log('学生信息修改失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                            this.$notify({
+                                title: "密码修改失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
+                            });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                     });
@@ -119,6 +129,7 @@
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
                 },
+                //获取用户信息
                 getStuMsg() {
                     var user = JSON.parse(sessionStorage.getItem('user'));
                     this.username = user.username;

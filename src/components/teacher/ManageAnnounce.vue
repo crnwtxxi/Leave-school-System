@@ -82,9 +82,6 @@ export default {
                     method: "post",
                     url: "/api/notice/invalid/" + row.id
                 }).then(res => {
-                    // console.log("111");
-                    // console.log(res);
-                    // console.log(row.id);
                     this.tableData.some((item, index) => {
                         if (item.id == row.id) {
                             this.tableData.splice(index, 1);
@@ -106,7 +103,6 @@ export default {
                         message: "删除成功!"
                     });
                 }).catch(error => {
-                    console.log("删除公告失败");
                     this.$message({
                         type: "error",
                         message: "请求错误，删除公告失败!"
@@ -154,8 +150,10 @@ export default {
                 method: "get",
                 url: "/api/notice/get/list"
             }).then(res => {
-                console.log("获取公告成功!");
-                console.log(res);
+                this.$message({
+                    type: "success",
+                    message: "获取公告成功!"
+                });
                 this.tableData.splice(0, this.tableData.length);
                 res.data.forEach(element => {
                     if (element.valid == true) {
@@ -165,12 +163,10 @@ export default {
                 this.announceCount = this.tableData.length;
                 this.handleCurrentChange(1);
             }).catch(error => {
-                console.log("公告获取失败");
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-                console.log("Error", error.message);
-                console.log(error.config);
+                this.$message({
+                    type: "error",
+                    message: "获取公告失败!"
+                });
             });
         }
     },

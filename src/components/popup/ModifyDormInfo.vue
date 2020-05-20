@@ -18,7 +18,6 @@
                         :label="item.label"
                         :value="item.value">
                         <span style="float: left">{{ item.label }}</span>
-                        <!-- <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span> -->
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -36,6 +35,17 @@
     import Vue from 'vue'
     export default {
         data() {
+            // 输入备注信息的验证
+            var remark = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]{1,10}/
+                 setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入10个以内的中文字符'));
+                    } else {
+                        callback();
+                    }         
+                }, 100);
+            };
             return {
                  states: [
                     {
@@ -48,6 +58,7 @@
                     }
                 ],
                 ruleForm: {},
+                // 表单验证规则
                 rules: {
                     user_name: [
                         { required: true, message: '请输入用户名', trigger: 'change' }
@@ -62,7 +73,8 @@
                         { required: true, message: '请选择后勤状态', trigger: 'change' }
                     ],
                     remark: [
-                        { required: true, message: '请输入备注', trigger: 'change' }
+                        { required: true, message: '请输入备注', trigger: 'change' },
+                        {validator: remark, trigger: 'change'}
                     ]
                 }
             };
@@ -95,7 +107,6 @@
                                     type: 'success',
                                     message: '修改信息成功'
                                 });
-                                console.log(this.$parent);
                                 this.$parent.$parent.successEdit();
                             }).catch(error=>{
                                 this.$message({
@@ -121,7 +132,6 @@
             getRowMsg() {
                 var JsonStr = sessionStorage.getItem('rowDormMsg');
                 this.ruleForm = JSON.parse(JsonStr);
-                console.log(this.ruleForm.name);
             }
         },
         mounted() {
