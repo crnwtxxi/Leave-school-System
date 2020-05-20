@@ -26,7 +26,7 @@
                 <el-input v-model="ruleForm.remark"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">立即添加</el-button>
                 <el-button @click="resetForm('ruleForm')">清空</el-button>
             </el-form-item>
         </el-form>
@@ -63,7 +63,39 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        console.log(this.ruleForm)
+                         this.$axios({
+                            method: 'post',
+                            url: 'http://106.15.206.229/library/create',
+                            withCredentials : true,
+                            data: {
+                                username:this.ruleForm.username,
+                                name:this.ruleForm.name,
+                                state:this.ruleForm.state,
+                                cost:this.ruleForm.cost,
+                                remark:this.ruleForm.remark
+                         },
+                         header: {
+                            'Content-Type': 'application/json;charset=UTF-8'
+                         }
+                         }).then((res) => {
+                         console.log('111');
+                         console.log(res);
+                         this.$notify({
+                            title: "添加成功",
+                            offset: 100,
+                            type: "success",
+                            showClose: false,
+                            duration: 1500
+                         });
+                         this.$emit('func');
+                         console.log(tableData)
+                         }).catch((error) => {}
+                        //  this.$message({
+                        //      type: 'info',
+                        //      message: '发布失败，请重新尝试！'
+                        //  }
+                         )
                     } else {
                         console.log('error submit!!');
                         return false;

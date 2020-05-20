@@ -36,6 +36,16 @@
     import Vue from 'vue'
     export default {
         data() {
+            var remark = (rule, value, callback) => {
+                var inputPattern = /[\u4e00-\u9fa5]{1,10}/
+                 setTimeout(() => {
+                    if (!inputPattern.test(value)) {
+                        callback(new Error('请输入10个以内的中文字符'));
+                    } else {
+                        callback();
+                    }         
+                }, 100);
+            };
             return {
                  states: [
                     {
@@ -62,7 +72,8 @@
                         { required: true, message: '请选择后勤状态', trigger: 'change' }
                     ],
                     remark: [
-                        { required: true, message: '请输入备注', trigger: 'change' }
+                        { required: true, message: '请输入备注', trigger: 'change' },
+                        {validator: remark, trigger: 'change'}
                     ]
                 }
             };

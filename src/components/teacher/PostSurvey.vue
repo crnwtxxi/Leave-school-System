@@ -10,7 +10,7 @@
         <div class="content">
             <h3>发布调查：</h3>
             <div class="QA">
-                      <h4>公告题目：</h4><input class="eInput" style="width: 500px;" v-model="title">
+                      <h4>调查题目：</h4><input class="eInput" style="width: 500px;" v-model="title">
                       <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="选择题" name="first">
                     <div id="select" >                       
@@ -66,14 +66,14 @@
      
         data() {
             return {
-                title:"",
+                title:"xx",
                 items:[
-                    {title:'',option:["","","",""]},
+                    {title:'xx',option:["x","x","x","x"]},
 
                     ],
                     activeName:'first',
                 question:[
-                    {title:""}
+                    {title:"x"}
                     ]
                 }
             

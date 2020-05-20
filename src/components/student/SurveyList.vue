@@ -52,7 +52,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[5,10,15,20]"
+          :page-sizes="[1,5,10,15,20]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="announceCount"
@@ -184,7 +184,7 @@ export default {
   methods: {
     //   查看公告的点击事件
     handleView(index, row) {
-      this.$router.push({ path: "/student/changepwd", query: { id: row.id } });
+      this.$router.push({ path: "/student/survey", query: { id: row.id } });
     },
     // 设置公告的有效性
     setTag(index, row) {
@@ -258,8 +258,37 @@ export default {
     }
   },
   mounted() {
-    this.handleCurrentChange(1);
-  }
+    this.$axios({
+                            method: 'get',
+                            url: 'http://106.15.206.229/survey/get/list'
+                            
+                        }).then((res) => {
+                            console.log('111');
+                           // console.log(res.data);
+                            
+                            this.tableData=res.data;
+                            console.log(this.tableData)
+                            var len=this.tableData.length
+                            for(var i=0 ; i<len ;i++){
+                              console.log("hello")
+                              this.tableData[i].date=this.tableData[i].date.substring(0,10)
+                            }
+                            this.handleCurrentChange(1);
+
+                            
+                        }).catch((error) => {
+                             
+                            console.log('调查获取失败');
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers); 
+                            console.log('Error', error.message);
+                            console.log(error.config);
+                        })
+                        
+                          }
+  
+  
 };
 </script>
 

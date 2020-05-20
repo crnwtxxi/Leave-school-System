@@ -4,7 +4,7 @@
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item >当前位置</el-breadcrumb-item>
                 <el-breadcrumb-item>公共调查</el-breadcrumb-item>
-                <el-breadcrumb-item>配置调查</el-breadcrumb-item>
+                <el-breadcrumb-item>查看调查结果</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="content">
@@ -12,7 +12,7 @@
             <div style="width: 600px;margin-left: 300px">
                     <h4>选择题结果显示</h4>
                     <el-collapse v-model="activeNames" >
-                        <el-collapse-item v-for="(item,i) in dataList" v-bind:title="item.title" v-bind:name="i" >
+                        <el-collapse-item v-for="(item,i) in dataList" v-bind:title="item.title" v-bind:name="i" :key="item.title">
                             <div v-bind:id="i">
                                 A:{{item.A.title}}<el-progress :text-inside="true" :stroke-width="26" :percentage="item.A.score"></el-progress>
                                 B:{{item.A.title}}<el-progress :text-inside="true" :stroke-width="24" :percentage="item.B.score" status="success"></el-progress>
@@ -26,7 +26,7 @@
              <div style="width: 600px;margin-left: 300px">
                     <h4>简答题结果显示</h4>
                     <el-collapse v-model="activeNames2" >
-                        <el-collapse-item v-for="(item,i) in dataTwoList" v-bind:title="item.title" v-bind:name="i" >
+                        <el-collapse-item v-for="(item,i) in dataTwoList" v-bind:title="item.title" v-bind:name="i" :key="item.title">
                             <div v-bind:id="i">
                                <el-table :data="item.ans" height="250" border style="width: 100%">
                                    <el-table-column prop="id" label="name" width="100"></el-table-column>

@@ -8,12 +8,24 @@
         </div>
         <div class="content clearfix">
             <div class="carousel">
+                <!-- 走马灯效果 -->
                 <el-carousel>
                     <el-carousel-item v-for="item in carouselList" :key="item.id">
+                        <!-- 图片标签，fit属性指示图片如何适应容器框 -->
                         <el-image :src="item.image" fit="fill"></el-image>
                     </el-carousel-item>
                 </el-carousel>
-                <span v-html="$xss(attack)"></span>
+                <div class="motto">
+                    <div>因为大学</div>
+                    <div>我们从五湖四海汇聚在一起！</div>
+                    <div>四年生活忙碌而闲适!</div>
+                    <div>学习紧张而刺激!</div>
+                    <div>友情诚挚而纯洁！</div>
+                    <div>春去秋来，时光荏苒</div>
+                    <div>岁月带有了我们的稚气</div>
+                    <div>留下了永恒的回忆！</div>
+                    <div>大学四年，我们曾经一起走过！</div>
+                </div>
                 <div class="page_container">
                     <el-pagination
                         layout="prev, pager, next"
@@ -84,18 +96,17 @@ export default {
                     image: 'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg' 
                 }
             ],
-            attack: '<a onmouseover=alert("XSS攻击")>click me!</a>'
         }
     },
     methods: {
         toLogin() {
             this.$router.push('/login')
         },
-        //查询公告详情
+        //点击某一个公告的时候查询公告详情
         toAnnounce(id) {
             this.$router.push({ name: 'announce', params: {id: id} });
         },
-        //获取所有公告
+        //去请求所有公告
         getAnnounces() {
             this.$axios({
                 method: 'get',
@@ -132,6 +143,7 @@ export default {
             }
         }
     },
+    // 组件的生命周期函数，当组件加载的时候会调用该函数
     mounted() {
         this.getAnnounces();
         this.handleCurrentChange(1);
@@ -146,6 +158,9 @@ export default {
     position: absolute;
     width: 100%;
 }
+/* 设置头部
+ * 位置，背景，高度和字体颜色
+*/
 .header {
     /* background-color: #276E51; */
     background-image: url(~@/assets/bg2.png);
@@ -172,7 +187,7 @@ export default {
     margin-top: 50px;
     margin-left: 5%;
     width: 20%;
-    height: 300px;
+    height: 100%;
     float: left;
 }
 .right {
@@ -194,6 +209,9 @@ export default {
     width: 300px;
     border: 1px solid #000;
     float: right;
+}
+.motto{
+    font-size: 23px;
 }
 .login {
     position: absolute;

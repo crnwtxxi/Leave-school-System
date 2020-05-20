@@ -52,7 +52,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[5,10,15,20]"
+          :page-sizes="[1,5,10,15,20]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="announceCount"
@@ -244,6 +244,7 @@ export default {
       console.log(`当前 ${val} 页`);
       this.currentPage = val;
       this.tableViewData.splice(0, this.tableViewData.length);
+
       for (
         var i = (this.currentPage - 1) * this.pageSize;
         i < this.currentPage * this.pageSize && i < this.announceCount;
@@ -259,34 +260,36 @@ export default {
     }
   },
   mounted() {
-    
+      
     this.$axios({
-                            method: 'get',
-                            url: 'http://106.15.206.229/survey/get/list'
-                            
-                        }).then((res) => {
-                            console.log('111');
-                           // console.log(res.data);
-                            
-                            this.tableData=res.data;
-                            console.log(this.tableData)
-                            var len=this.tableData.length
-                            for(var i=0 ; i<len ;i++){
-                              console.log("hello")
-                              this.tableData[i].date=this.tableData[i].date.substring(0,10)
-                            }
-                            this.handleCurrentChange(1);
+                 method: 'get',
+                url: 'http://106.15.206.229/survey/get/list'
+                
+            }).then((res) => {
+                console.log('111');
+               // console.log(res.data);
+                
+                this.tableData=res.data;
+                console.log(this.tableData)
+                var len=this.tableData.length
+                this.announceCount=len
+                for(var i=0 ; i<len ;i++){
+                  console.log("hello")
+                  this.tableData[i].date=this.tableData[i].date.substring(0,10)
+                }
+              this.handleCurrentChange(1);
 
-                            
-                        }).catch((error) => {
+
+                
+             }).catch((error) => {
                              
-                            console.log('调查获取失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
-                        })
+                 console.log('调查获取失败');
+                 console.log(error.response.data);
+                 console.log(error.response.status);
+                 console.log(error.response.headers); 
+                 console.log('Error', error.message);
+                 console.log(error.config);
+             })
                         
                           }
 };
