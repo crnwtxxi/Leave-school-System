@@ -10,14 +10,17 @@
         <div class="content">
             <h3>发布调查：</h3>
             <div class="QA">
-                      <h4>调查题目：</h4><input class="eInput" style="width: 500px;" v-model="title">
-                      <el-tabs v-model="activeName" @tab-click="handleClick">
+                      <h4>调查题目：</h4>
+                      <input class="eInput" style="width: 500px;" v-model="title" placeholder="请输入标题">
+                       <el-button type="primary" plain class="add" style="float: right;  " v-on:click="verify">发布
+                       </el-button>
+                      <el-tabs v-model="activeName" >
                         <el-tab-pane label="选择题" name="first">
                     <div id="select" >                       
                         <ul>
                            <li v-for="(item,index) in items" style="margin-top:30px">
                             <input style="width:500px;margin-left: 15px" class="eInput" placeholder="请输入标题" @input="updateTitleSelect($event,index)">
-                <!--         <el-input placeholder="请输入标题" style="width: 500px" ></el-input> -->
+               
                             <br>
                             <br>
                             <a>A:</a><input class="eInput" type="" name="" style="width:100px;margin-left: 5px" @input="updateSelectOption($event,index,0)">
@@ -31,19 +34,17 @@
                             
                         </ul>
                          <el-button type="primary" plain class="add" v-on:click="addSelect">添加题目</el-button>
-
-                        <el-button type="primary" plain class="add" v-on:click="deleteSelect">删除题目</el-button>
-                                               </div>
+                         <el-button type="primary" plain class="add" v-on:click="deleteSelect">删除题目</el-button>
+                      </div>
                     </el-tab-pane>
                     <el-tab-pane label="问答题" name="second">
                     
                     <div id="answer">
                        
-                        <!-- <button v-on:click="addQuestion">添加题目</button> -->
+                     
                         <ul>
                            <li v-for="(item,index) in question" :key="item.message" style="margin-top:30px">
                              <input class="eInput" placeholder="请输入标题" style="width: 500px" @input="updateQuestion($event,index)">
-               <!--              <input type="" name="" style="width:400px;margin-left: 15px" @input="updateQuestion($event,index)"> -->
                             <br>
                             </li>
                         </ul>
@@ -52,7 +53,7 @@
                     </div>
                 </el-tab-pane>
                 </el-tabs>
-                 <el-button type="primary" plain class="add" style="margin-top:80px; " v-on:click="verify">发布</el-button>
+                
            </div>
             </div>
         </div>
@@ -63,73 +64,69 @@
 
     
     export default {
-     
+     //数据
         data() {
             return {
-                title:"xx",
+                title:"",
                 items:[
-                    {title:'xx',option:["x","x","x","x"]},
+                   
 
                     ],
                     activeName:'first',
                 question:[
-                    {title:"x"}
+                    
                     ]
                 }
             
         },
         methods: {
-             open() {
-                  this.$alert('您的信息还未创建完整', '错误提醒', {
-                  confirmButtonText: '确定',
-                  callback: action => {
-                 this.$message({
-                        type: 'info',
-                        message: `请检查发布内容`
-                         });
-                        }
-                    });
-                    }
-                ,
-            deleteQuestion:function(){
+            //打开提示信息
+            open() {
+                  this.$notify({
+                  title: "添加题目失败",
+                  message: "请检查之前的题目是否填完整",
+                  offset: 100,
+                  type: "error",
+                  showClose: false,
+                  duration: 2000
+                  });
+                   },
+            //删除题目
+            deleteQuestion(){
                 this.question.pop()
             },
-
-            deleteSelect:function(){
+            deleteSelect(){
                 this.items.pop()
             } ,
-            addSelect:function(){
+            //添加题目
+            addSelect(){
                 var len=this.items.length
                 
                 if(len==0){
                      this.items.push({title:'',option:["","","",""]})
                      return
                 }
+                //这个是判断上一个答案是否有空的情况，如果为空的话，就给出提示信息
                 var check1=this.items[len-1].title
                 var flg1=1
                 var flg2=1
                 if(check1==''){
                     flg1=0
                 }
-                
-                    var check2=this.items[len-1].option
-                    for (var i in check2){
+                var check2=this.items[len-1].option
+                for (var i in check2){
                         if(i==''){
                             flg2=0
                         }
-                    }
-                
-
-
+                }
                 if((!flg1||!flg2)){
                     this.open()
                 }
                 else {
                 this.items.push({title:'',option:["","","",""]})
-            }
-            
+                    }
             },
-            addQuestion:function () {
+            addQuestion() {
                 var len=this.question.length
                 if(len==0){
                     this.question.push({title:""})
@@ -144,42 +141,38 @@
             }
                 
             },
-            updateTitleSelect:function(event,index){
-                console.log(event.currentTarget.value)
+            //更新标题数据变化，并进行xss过滤
+            updateTitleSelect(event,index){
+                
                 var updateValue=event.currentTarget.value
-                console.log(this.items[index].title)
-                console.log("arrary"+this.items)
-                this.items[index].title=updateValue
-                console.log('title'+this.items[index].title)
-
+                this.items[index].title=this.stripscript(updateValue)
             },
-            updateSelectOption:function(event,index,optionIndex){
+            //更新标题选项，并进行xss过滤
+            updateSelectOption(event,index,optionIndex){
+                var updateValue=event.currentTarget.value       
+                this.items[index].option[optionIndex]=this.stripscript(updateValue)
+               
+            },
+            //更新问答题标题，并进行xss过滤
+            updateQuestion(event,index){
                 var updateValue=event.currentTarget.value
-                //console.log(this.items[index].option[optionIndex])
-                this.items[index].option[optionIndex]=updateValue
-                //console.log(this.items[index].option[optionIndex])
+                this.question[index].title=this.stripscript(updateValue)
             },
-            updateQuestion:function(event,index){
-                var updateValue=event.currentTarget.value
-                console.log(this.question[index].title)
-                this.question[index].title=updateValue
-            },
-            handleClick(tab,event){
-
-            },
-            postSurvey:function(){
-                //
-                    // 将数据传送到数据库，然后页面展示发布成功，然后
-                //
-            },
+            //进行xss过滤            
+            stripscript(s)
+            {
+                //过滤掉敏感的字母,预防xss攻击
+                var pattern = new RegExp("[%--`~!@#$^&*()=|{}''\\[\\]<>/?~！@#￥……&*（）――|{}【】‘”“']")
+                var rs = "";
+                for (var i = 0; i < s.length; i++) { rs=rs+s.substr(i,1).replace(pattern,''); } return rs; 
+            }, 
+            //给出提示信息 
             verify() {
                 var check=this.title
-
                 if(check==''){
                     this.open()
                     return
                 }
-
                 this.$confirm('确认发布？，是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -187,7 +180,7 @@
                 }).then(() => {
                  this.$axios({
                             method: 'post',
-                            url: 'http://106.15.206.229/survey/post',
+                            url: '/api/survey/post',
                             withCredentials : true,
                             data: {
                                title:this.title,
@@ -198,8 +191,6 @@
                                 'Content-Type': 'application/json;charset=UTF-8'
                             }
                         }).then((res) => {
-                            console.log('111');
-                            console.log(res);
                             this.$notify({
                                 title: "发布成功",
                                 offset: 100,
@@ -209,27 +200,24 @@
                             });
                             this.$emit('func');
                         }).catch((error) => {
-                             this.$message({
-                                     type: 'info',
-                                     message: '发布失败，请重新尝试！'
-                                 });    
-                            console.log('失败');
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers); 
-                            console.log('Error', error.message);
-                            console.log(error.config);
+                             this.$notify({
+                             title: "发布失败",
+                             offset: 100,
+                             type: "error",
+                             showClose: false,
+                             duration: 1500
+                             });
+                            
                         })
-                // this.$message({
-
-                //     type: 'success',
-                //     message: '调查发布成功！'
-                // });
+                
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消发布！'
-                    });          
+                    this.$notify({
+                    title: "发布取消",
+                    offset: 100,
+                    type: "error",
+                    showClose: false,
+                    duration: 1500
+                    });
                 });
             }
 

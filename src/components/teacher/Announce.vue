@@ -41,7 +41,15 @@
                     this.announceDetail = res.data;
                     this.announceDetail.date = this.announceDetail.date.substring(0,10);
                     this.announceDetail.content = filterXSS(this.announceDetail.content);
+                     this.$message({
+                        type: "success",
+                        message: "获取公告成功!"
+                    });
                 }).catch((error) => {
+                    this.$message({
+                        type: "error",
+                        message: "获取公告失败!"
+                    });
                     console.log('公告详情获取失败');
                     console.log(error.response.data);
                     console.log(error.response.status);

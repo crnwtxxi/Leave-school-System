@@ -37,6 +37,32 @@
     import Vue from 'vue'
     export default {
         data() {
+             var checkChinese = (rule, value, callback) => {
+                 var inputPattern = /[\u4e00-\u9fa5]/;
+                    if (!value) {
+                         return callback(new Error('不能为空'));
+                     }
+                     setTimeout(() => {
+                     if (!inputPattern.test(value)) {
+                         callback(new Error('请正确输入,只能输入中文'));
+                     } else {
+                     callback();
+                     }
+                     }, 500);
+             };
+             var checkDigal = (rule, value, callback) => {
+                    var inputPattern = /^\d*\.?\d+$/;
+                    if (!value) {
+                         return callback(new Error('不能为空'));
+                     }
+                     setTimeout(() => {
+                         if (!inputPattern.test(value)) {
+                         callback(new Error('请正确输入,只能输入数字'));
+                         } else {
+                            callback();
+                         }
+                             }, 500);
+                         };
             return {
                 states: [
                     {
@@ -51,11 +77,18 @@
                 ruleForm: {},
                 rules: {
                     cost: [
-                        { required: true, message: '请输入费用', trigger: 'blur' }
+                        {validator:checkDigal,  trigger: 'blur' }
                     ],
                     remark: [
-                        { required: true, message: '请输入费用原因', trigger: 'change' }
-                    ]
+                        {validator:checkChinese,trigger: 'blur' }
+                     ],
+                     username:[
+                        {validator:checkDigal,trigger: 'blur' }
+                     ],
+                     name:[
+                       {validator:checkChinese,trigger: 'blur' }
+                     ]
+
                 }
             };
         },
@@ -63,10 +96,9 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log(this.ruleForm)
                          this.$axios({
                             method: 'post',
-                            url: 'http://106.15.206.229/library/create',
+                            url: '/api/library/create',
                             withCredentials : true,
                             data: {
                                 username:this.ruleForm.username,
@@ -79,8 +111,7 @@
                             'Content-Type': 'application/json;charset=UTF-8'
                          }
                          }).then((res) => {
-                         console.log('111');
-                         console.log(res);
+      
                          this.$notify({
                             title: "添加成功",
                             offset: 100,
@@ -89,15 +120,20 @@
                             duration: 1500
                          });
                          this.$emit('func');
-                         console.log(tableData)
-                         }).catch((error) => {}
-                        //  this.$message({
-                        //      type: 'info',
-                        //      message: '发布失败，请重新尝试！'
-                        //  }
+                         
+                         }).catch((error) => {
+                             this.$notify({
+                             title: "服务器繁忙",
+                             offset: 100,
+                             type: "error",
+                             showClose: false,
+                             duration: 1500
+                             });
+                         }
+                             
                          )
                     } else {
-                        console.log('error submit!!');
+                        
                         return false;
                     }
                 });

@@ -16,27 +16,6 @@
                         </el-button>
                         <el-button type="danger" size="mini" @click="handleDelete()">删除<i class="el-icon-delete el-icon--right"></i></el-button>
                     </div>
-                    <!-- <div class="query">
-                        <el-form :model="ruleForm" ref="ruleForm" label-width="70px" class="demo-ruleForm">
-                            <el-row>
-                                <el-col :span="8">
-                                    <el-form-item label="学号" prop="username">
-                                        <el-input v-model="ruleForm.username"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-form-item label="姓名" prop="name">
-                                        <el-input v-model="ruleForm.name"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-form-item>
-                                        <el-button type="primary" @click="onQuery" style="margin-left:-20px;">立即查询</el-button>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
-                        </el-form>
-                    </div> -->
                 </div>
                 <div class="manage">
                     <el-divider></el-divider>
@@ -142,10 +121,6 @@
             return {
                 modifyDormInfo_dialogTableVisible: false,
                 addDorm_dialogTableVisible: false,
-                // ruleForm: {
-                //     username: "",
-                //     name: ""
-                // },
                 tableData: [
                     
                 ],
@@ -170,7 +145,6 @@
                 this.handleCurrentChange(1);
             },
             handleCurrentChange(val){
-                console.log("调用了handleCurrentChange函数,当前页"+val);
                 this.currentPage = val;
                 this.tableData.splice(0, this.tableData.length);
                 for (
@@ -180,21 +154,6 @@
                 ) {
                     this.tableData.push(this.tableAllData[i]);
                 }
-                console.log("tableData的数据");
-                console.log(this.tableData);
-            },
-            // 查询的方法
-            onQuery() {
-                console.log("调用了查询");
-                // this.tablefilterData = this.tableAllData;
-                // console.log(this.tableAllData.length);
-                // this.tableAllData.splice(0,this.tableAllData.length);
-                // this.tablefilterData.forEach(element => {
-                //     if((this.ruleForm.username == ""||this.ruleForm.username == element.user_name)&&(this.ruleForm.name == ""||this.ruleForm.name == element.name)){
-                //         this.tableAllData.push(element);
-                //     }
-                // });
-                this.handleCurrentChange(1);
             },
             resetDateFilter() {
                 this.$refs.filterTable.clearFilter('date');
@@ -210,7 +169,6 @@
                 return row[property] === value;
             },
             handleEdit(index, row) {
-                console.log(index, row);
                 sessionStorage.setItem('rowDormMsg', JSON.stringify(row));
                 this.modifyDormInfo_dialogTableVisible = true;
             },
@@ -246,7 +204,6 @@
                             return true;
                         }
                     });
-                    console.log("当前tableAllData的数据：" + this.tableAllData);
                     this.$message({
                         type: "success",
                         message: "删除学生"+name+"成功!"
@@ -257,30 +214,28 @@
                         type: "error",
                         message: "请求错误，删除"+name+"学生失败!"
                     });
-                    console.log(error);
                 });
             },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-                console.log(this.multipleSelection);
             },
             getDormInfo(){
                 this.$axios({
                 method: "get",
                 url: "/api/dorm/get/list"
                 }).then(res => {
-                    console.log("获取后勤数据成功!");
-                    console.log(res);
+                    this.$message({
+                        type: "success",
+                        message: "获取后勤数据成功!"
+                    });
                     this.tableAllData = res.data;
                     this.tableDataCount = this.tableAllData.length;
                     this.handleCurrentChange(1);
                 }).catch(error => {
-                    console.log("后勤数据获取失败");
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                    console.log("Error", error.message);
-                    console.log(error.config);
+                    this.$message({
+                        type: "error",
+                        message: "请求错误，获取后勤数据失败!"
+                    });
                 });
             },
             successAdd(){
@@ -288,13 +243,11 @@
                 this.getDormInfo();
             },
             successEdit(){
-                console.log('修改成功函数被调用!');
                 this.modifyDormInfo_dialogTableVisible = false;
                 this.getDormInfo();
             }
         },
         mounted() {
-            console.log("调用加载函数成功!");
             this.getDormInfo();
         },
         components: {
@@ -310,6 +263,7 @@
  *是有作用域的，其包含的样式只作用于当前组件
  */
 .locat {
+    /* 当前位置的定位 */
     position: absolute;
     top: 20px;
     left: 40px;
@@ -321,17 +275,17 @@
     top: 70px;
 }
 .content h3 {
+    /* 主要内容的定位 */
     margin-left: 40px;
 }
 .data {
-    /* position: absolute; */
-    /* border: 1px solid #000; */
+    /* 表格内容的定位 */
     width: 80%;
     height: 100%;
     margin: 0 auto;
 }
 .delete {
-    /* border: 1px solid #000; */
+    /* 增加和删除按钮的定位 */
     float: left; 
     margin-top: 10px;
 }
@@ -343,12 +297,9 @@
     float: right;
 }
 .manage{
-    /* border: 1px solid red; */
     clear: both;
-    /* margin-left: 40px; */
 }
 .page {
-    /* border: 1px solid #000; */
     text-align: center;
     margin-top: 20px;
     margin-bottom: 20px;

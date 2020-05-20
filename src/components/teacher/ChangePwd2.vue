@@ -75,38 +75,49 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log(this.username);
-                        console.log(this.ruleForm.pwd);
-                        console.log(this.ruleForm.oldPwd);
+                        // alert('submit!');
                         this.$axios({
-                            method: "post",
-                            url: "/api/admin/modify/password",
-                            withCredentials: true,
+                            method: 'post',
+                            url: '/api/admin/modify/password',
+                            withCredentials : true,
                             data: {
                                 username: this.username,
                                 password: this.ruleForm.pwd,
                                 origin: this.ruleForm.oldPwd
                             },
                             header: {
-                                "Content-Type": "application/json;charset=UTF-8"
+                                'Content-Type': 'application/json;charset=UTF-8'
                             }
-                        }).then(res=>{
+                        }).then((res) => {
                             this.resetForm('ruleForm');
-                            this.$message({
-                                type: 'success',
-                                 message: '修改密码成功'
+                            this.$notify({
+                                title: "密码修改成功",
+                                message: "请重新登录",
+                                offset: 100,
+                                type: "success",
+                                showClose: false,
+                                duration: 2000
                             });
                             this.$router.push('/login');
-                        }).catch(error=>{
-                            this.resetForm('ruleForm');
-                            console.log(error);
-                            this.$message({
-                                type: 'error',
-                                 message: '修改密码失败'
+                        }).catch((error) => {
+                            this.$notify({
+                                title: "密码修改失败",
+                                message: "请重试",
+                                offset: 100,
+                                type: "error",
+                                showClose: false,
+                                duration: 2000
                             });
                         })
                     } else {
-                        console.log('error submit!!');
+                        this.$notify({
+                            title: "表单提交失败",
+                            message: "请重试",
+                            offset: 100,
+                            type: "error",
+                            showClose: false,
+                            duration: 2000
+                        });
                         return false;
                     }
                     });

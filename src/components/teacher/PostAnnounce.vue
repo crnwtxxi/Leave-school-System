@@ -127,7 +127,6 @@ export default {
 							"Content-Type": "application/json;charset=UTF-8"
 						}
 					}).then(res => {
-						console.log("111");
 						this.$notify({
 							title: "公告发布成功",
 							message: "可以在首页公告栏处查看",
@@ -138,16 +137,24 @@ export default {
 						});
 						this.resetForm("ruleForm");
 					}).catch(error => {
-						console.log("发布失败");
-						console.log(error.response.data);
-						console.log(error.response.status);
-						console.log(error.response.headers);
-						console.log("Error", error.message);
-						console.log(error.config);
+						this.$notify({
+							title: "发布失败",
+							message: "公告发布失败，请重新尝试！",
+							offset: 100,
+							type: "error",
+							showClose: false,
+							duration: 2500
+						});
 					});
 				} else {
-					console.log("error submit!!");
-					return false;
+					this.$notify({
+						title: "发布失败",
+						message: "公告发布失败，请重新尝试！",
+						offset: 100,
+						type: "error",
+						showClose: false,
+						duration: 2500
+					});
 				}
      		});
     	},
