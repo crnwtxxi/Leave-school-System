@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import qs from 'qs'
 import axios from 'axios'
 import xss from 'xss'
+import md5 from 'js-md5'
 
 //引入 Element UI 组件
 import ElementUI from "element-ui";
@@ -15,6 +16,8 @@ Vue.use(ElementUI)
 Vue.prototype.$qs = qs
 Vue.prototype.$axios = axios
 Vue.prototype.$xss = xss
+Vue.prototype.$md5 = md5
+Vue.prototype.Base64 = require('js-base64').Base64
 
 // axios.defaults.baseURL = '/'  //每次发送的请求都会带一个/api的前缀
 
