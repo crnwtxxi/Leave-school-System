@@ -130,7 +130,6 @@
                                 "Content-Type": "application/json;charset=UTF-8"
                             }
                         }).then(res => {
-                            console.log("添加后勤数据成功!");
                             this.$message({
                                 type:'success',
                                 message:'学生数据添加成功!'
@@ -146,8 +145,10 @@
                             }
                         });
                     } else {
-                        console.log('error submit!!');
-                        return false;
+                        this.$message({
+                            type:'error',
+                            message:'提交数据失败，请重新提交！'
+                        });
                     }
                 });
             },
