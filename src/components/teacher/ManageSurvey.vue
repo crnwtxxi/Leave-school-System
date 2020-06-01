@@ -11,6 +11,7 @@
       <h3>管理调查：</h3>
       <div id="table">
         <el-table
+          v-loading="loading"
           :data="tableViewData.filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase()))"
           style="width: 100%">
           <el-table-column label="调查标题" prop="title"></el-table-column>
@@ -51,7 +52,8 @@
         ],
         search: "",
         currentPage: 1,
-        pageSize: 1
+        pageSize: 1,
+        loading:true
       };
     },
     methods: {
@@ -174,9 +176,7 @@
           this.tableData[i].date = this.tableData[i].date.substring(0, 10)
         }
         this.handleCurrentChange(1);
-
-
-
+        this.loading=false; 
       }).catch((error) => {
 
         this.$notify({

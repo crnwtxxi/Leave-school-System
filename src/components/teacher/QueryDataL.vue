@@ -21,8 +21,8 @@
         </div>
         <div class="manage">
           <el-divider></el-divider>
-          <el-table ref="filterTable" :data="tableView" stripe style="width: 100%" class="table"
-            @selection-change="handleSelectionChange">
+          <el-table v-loading="loading" ref="filterTable" :data="tableView" stripe style="width: 90%;margin: 0 auto;"
+            class="table" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column prop="username" label="用户名" width="180">
@@ -88,7 +88,8 @@
         currentPage: 1,
         pageSize: 3,
         tableData: [],
-        multipleSelection: []
+        multipleSelection: [],
+        loading: true
       }
     },
     methods: {
@@ -149,13 +150,13 @@
           this.handleCurrentChange(1);
         }).catch((error) => {
           this.$notify({
-          title: "服务器繁忙，请稍等",
-          offset: 100,
-          type: "error",
-          showClose: false,
-          duration: 1500
+            title: "服务器繁忙，请稍等",
+            offset: 100,
+            type: "error",
+            showClose: false,
+            duration: 1500
           });
-        
+
         })
       },
       //正则过滤（字符串）
@@ -181,7 +182,7 @@
         //  前端的删除
 
         for (var i = 0; i < len; i++) {
-       
+
           for (var j = 0; j < len2; j++) {
             if (tmpTable[i].id == this.tableData[j].id) {
               this.tableData.splice(j, 1);
@@ -202,7 +203,7 @@
       //数据的变化
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        
+
       },
       //页数的大小变化
       handleSizeChange(val) {
@@ -231,6 +232,7 @@
       }).then((res) => {
         this.tableData = res.data
         this.handleCurrentChange(1);
+        this.loading = false
       }).catch((error) => {
         this.$notify({
           title: "服务器繁忙，请稍等",
@@ -275,6 +277,9 @@
     float: left;
     margin-left: 40px;
     margin-top: 10px;
+    /* width: 80%;
+    //height: 100%;
+    //margin: 0 auto; */
   }
 
   .query {

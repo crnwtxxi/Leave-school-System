@@ -73,28 +73,19 @@
         rules: {
           cost: [{
             validator: checkDigal,
-            required: true,
-            message: '请输入费用',
+ 
             trigger: 'blur'
           }],
           remark: [{
             validator: checkChinese,
-            required: true,
-            message: '请输入费用原因',
-            trigger: 'change'
+            trigger: 'blur'
           }]
         }
       };
     },
     methods: {
       submitForm(formName) {
-        if (!checkIdigal(this.cost)) {
-          this.$message({
-            type: 'info',
-            message: '你的欠款项没有填写正确，请重新填写'
-          });
-          return
-        }
+      
         this.$refs[formName].validate((valid) => {
           if (valid) {
 
@@ -167,5 +158,7 @@
 </script>
 
 <style scoped>
-
+.demo-ruleForm{
+    
+}
 </style>

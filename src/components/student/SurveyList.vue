@@ -11,6 +11,7 @@
       <h3>查看调查：</h3>
       <div id="table">
         <el-table
+          v-loading="loading"
           :data="tableViewData.filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase()))"
           style="width: 100%">
           <el-table-column label="调查标题" prop="title"></el-table-column>
@@ -48,7 +49,8 @@
         ],
         search: "",
         currentPage: 1,
-        pageSize: 1
+        pageSize: 1,
+        loading:true
       };
     },
     methods: {
@@ -144,6 +146,7 @@
         }
         this.handleCurrentChange(1);
         this.announceCount = this.tableData.length
+        this.loading=false
       }).catch((error) => {
           this.$notify({
           title: "服务器繁忙，请稍等",

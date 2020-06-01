@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-loading.fullscreen.lock="loading">
     <div class="locat">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>当前位置</el-breadcrumb-item>
@@ -9,8 +9,8 @@
     </div>
     <div class="content">
       <h3>{{title}}结果：</h3>
-      <h3>目前共有{{num}}人进行填写</h3>
-      <div style="width: 600px;margin-left: 300px">
+      <h3>目前共有{{num}}人填写完成</h3>
+      <div class="QA">
         <h4>选择题结果显示</h4>
         <el-collapse v-model="activeNames">
           <el-collapse-item v-for="(item,i) in dataList" v-bind:title="item.title" v-bind:name="i" :key="item.title">
@@ -28,14 +28,14 @@
 
         </el-collapse>
       </div>
-      <div style="width: 600px;margin-left: 300px">
+      <div class="QA">
         <h4>简答题结果显示</h4>
         <el-collapse v-model="activeNames2">
           <el-collapse-item v-for="(item,i) in dataTwoList" v-bind:title="item.title" v-bind:name="i" :key="item.title">
             <div v-bind:id="i">
               <el-table :data="item.anstion" height="250" border style="width: 100%">
                 <el-table-column prop="id" label="name" width="100"></el-table-column>
-                <el-table-column prop="answer" label="answer" width="495"></el-table-column>
+                <el-table-column prop="answer" label="answer" width="500"></el-table-column>
                 <!-- <el-table-column prop="item.ans.answer" label="ans" width="200"></el-table-column> -->
               </el-table>
             </div>
@@ -59,7 +59,9 @@
         activeNames2: ['1'],
         dataList: [],
         dataTwoList: [],
-        num: 0
+        num: 0,
+        loading:true
+        
 
       };
     },
@@ -80,6 +82,7 @@
         this.title = res.data.title
         this.dataList = res.data.choice
         this.dataTwoList = res.data.questionAnswer
+        this.loading=false
       }).catch((error) => {
         this.$notify({
         title: "服务器繁忙",
@@ -114,8 +117,13 @@
    #submit {
    margin-top: 50px;
    text-align: center;
+   width: 770px;
    }
 #back{
-  margin-right: 30px;
+  float:right;
+}
+.QA{
+  width: 600px;
+  margin-left: 470px
 }
 </style>

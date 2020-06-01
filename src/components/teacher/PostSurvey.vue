@@ -68,16 +68,10 @@
         data() {
             return {
                 title:"",
-                items:[
-                   
-
-                    ],
-                    activeName:'first',
-                question:[
-                    
-                    ]
-                }
-            
+                items:[],
+                activeName:'first',
+                question:[]
+                }   
         },
         methods: {
             //打开提示信息
@@ -98,7 +92,7 @@
             deleteSelect(){
                 this.items.pop()
             } ,
-            //添加题目
+            //添加题目，这里涉及到检查题目是否填完整
             addSelect(){
                 var len=this.items.length
                 
@@ -173,7 +167,7 @@
                     this.open()
                     return
                 }
-                this.$confirm('确认发布？，是否继续?', '提示', {
+                this.$confirm('确认发布？是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -242,7 +236,7 @@
 
 }
 .QA{
-    margin-left: 250px;
+    margin-left: 450px;
     width: 800px;
 }
 .add{
