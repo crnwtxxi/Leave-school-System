@@ -1,7 +1,7 @@
 <template>
     <div class="home_container">
         <div class="header">
-            <div class="system">数字离线系统</div>
+            <div class="system">数字离校系统</div>
             <div class="login" @click="toLogin">
                 <el-button plain>登录</el-button>
             </div>

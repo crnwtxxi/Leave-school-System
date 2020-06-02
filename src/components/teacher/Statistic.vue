@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-loading.fullscreen.lock="loading">
     <div class="locat">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>当前位置</el-breadcrumb-item>
@@ -24,6 +24,7 @@
     name: '',
     data() {
       return {
+        loading:true,
         total:0,
         charts: '',
         opinion: ['教务处未完成人数', '教务处完成人数'],
@@ -144,6 +145,7 @@
           this.drawPie('main2');
           this.drawPie('main3');
           this.drawPie('main4');
+          this.loading=false
           
         }).catch((error) => {
 
