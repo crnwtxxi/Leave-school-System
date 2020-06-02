@@ -36,7 +36,7 @@
                         <el-input v-model="form.cardid" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item style="text-align:center;">
-                        <el-button @click="verify" class="verify" v-if="!this.check">{{buttonText}}</el-button>
+                        <el-button @click="verify" class="verify" v-if="!this.check">确认</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -50,6 +50,7 @@
 
 <script>
     export default {
+        inject:['reload'], 
         data() {
             return {
                 form: {},
@@ -77,6 +78,8 @@
                             showClose: false,
                             duration: 2000
                         });
+                        this.check = true;
+                        this.reload();//刷新页面
                     }).catch((error) => {
                         this.$notify({
                             title: "信息核对失败",
@@ -151,14 +154,15 @@
                     this.check = res.data.student;
                     sessionStorage.setItem('plan', JSON.stringify(res.data));
                 }).catch((error) => {
-                    this.$notify({
-                        title: "学生核对情况获取失败",
-                        message: "请重试",
-                        offset: 100,
-                        type: "error",
-                        showClose: false,
-                        duration: 2000
-                    });
+                    console.log(error);
+                    // this.$notify({
+                    //     title: "学生核对情况获取失败",
+                    //     message: "请重试",
+                    //     offset: 100,
+                    //     type: "error",
+                    //     showClose: false,
+                    //     duration: 2000
+                    // });
                 })
             }
         },

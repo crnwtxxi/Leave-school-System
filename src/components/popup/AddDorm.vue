@@ -34,48 +34,9 @@
 
 <script>
     import Vue from 'vue'
+    import {checkUsername, checkName, checkLocation, checkRemark} from '../../components/reg.js'
     export default {
         data() {
-            var user_name = (rule, value, callback) => {
-                var inputPattern = /^20\d{8}$/
-                 setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的学号'));
-                    } else {
-                        callback();
-                    }         
-                }, 500);
-            };
-            var name = (rule, value, callback) => {
-                var inputPattern = /[\u4e00-\u9fa5]{2,6}/
-                 setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的名字'));
-                    } else {
-                        callback();
-                    }         
-                }, 500);
-            };
-            var location = (rule, value, callback) => {
-                var inputPattern = /^\d{1}-\d{3}$/
-                 setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的寝室号'));
-                    } else {
-                        callback();
-                    }         
-                }, 100);
-            };
-            var remark = (rule, value, callback) => {
-                var inputPattern = /[\u4e00-\u9fa5]{1,10}/
-                 setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入10个以内的中文字符'));
-                    } else {
-                        callback();
-                    }         
-                }, 100);
-            };
             return {
                  states: [
                     {
@@ -91,22 +52,22 @@
                 rules: {
                     user_name:[
                         {required: true, message: '请输入用户名', trigger: 'change'},
-                        {validator: user_name, trigger: 'change'}
+                        {validator: checkUsername, trigger: 'change'}
                     ],
                     name:[
                         {required: true, message: '请输入姓名', trigger: 'change'},
-                        {validator: name, trigger: 'change'}
+                        {validator: checkName, trigger: 'change'}
                     ],
                     location:[
                         {required: true, message: '请输入寝室号', trigger: 'change'},
-                        {validator: location, trigger: 'change'}
+                        {validator: checkLocation, trigger: 'change'}
                     ],
                     state:[
                         {required: true, message: '请选择状态', trigger: 'change'}
                     ],
                     remark: [
                         { required: true, message: '请输入备注', trigger: 'change' },
-                        {validator: remark, trigger: 'change'}
+                        {validator: checkRemark, trigger: 'change'}
                     ]
                 }
             };

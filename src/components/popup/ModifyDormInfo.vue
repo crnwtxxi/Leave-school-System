@@ -33,19 +33,9 @@
 
 <script>
     import Vue from 'vue'
+    import {checkRemark} from '../../components/reg.js'
     export default {
         data() {
-            // 输入备注信息的验证
-            var remark = (rule, value, callback) => {
-                var inputPattern = /[\u4e00-\u9fa5]{1,10}/
-                 setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入10个以内的中文字符'));
-                    } else {
-                        callback();
-                    }         
-                }, 100);
-            };
             return {
                  states: [
                     {
@@ -74,7 +64,7 @@
                     ],
                     remark: [
                         { required: true, message: '请输入备注', trigger: 'change' },
-                        {validator: remark, trigger: 'change'}
+                        {validator: checkRemark, trigger: 'change'}
                     ]
                 }
             };

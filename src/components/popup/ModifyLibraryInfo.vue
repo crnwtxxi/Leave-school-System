@@ -30,35 +30,9 @@
 
 <script>
   import Vue from 'vue'
+  import {checkChinese, checkDigal} from '../../components/reg.js'
   export default {
     data() {
-      var checkChinese = (rule, value, callback) => {
-        var inputPattern = /[\u4e00-\u9fa5]/;
-        if (!value) {
-          return callback(new Error('不能为空'));
-        }
-        setTimeout(() => {
-          if (!inputPattern.test(value)) {
-            callback(new Error('请正确输入,只能输入中文'));
-          } else {
-            callback();
-          }
-        }, 1000);
-      };
-      var checkDigal = (rule, value, callback) => {
-        var inputPattern = /^\d*\.?\d+$/;
-        if (!value) {
-          return callback(new Error('不能为空'));
-        }
-        setTimeout(() => {
-          if (!inputPattern.test(value)) {
-            callback(new Error('请正确输入,只能输入数字'));
-          } else {
-            callback();
-          }
-        }, 1000);
-      };
-
       return {
         states: [{
             value: '0',

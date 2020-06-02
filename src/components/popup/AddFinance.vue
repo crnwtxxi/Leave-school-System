@@ -35,48 +35,9 @@
 
 <script>
     import Vue from 'vue'
+    import {checkUsername, checkChinese, checkCost} from '../../components/reg.js'
     export default {
         data() {
-            var checkUsername = (rule, value, callback) => {
-                var inputPattern = /^\d{10}$/;
-                if (!value) {
-                    return callback(new Error('学号不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的学号'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
-            var checkChinese = (rule, value, callback) => {
-                var inputPattern = /[\u4e00-\u9fa5]/;
-                if(!value) {
-                    callback();
-                } else {
-                    setTimeout(() => {
-                        if (!inputPattern.test(value)) {
-                            callback(new Error('请正确输入,只能输入中文'));
-                        } else {
-                            callback();
-                        }
-                    }, 1000);
-                }
-            };
-            var checkCost = (rule, value, callback) => {
-                var inputPattern = /^-?(([0-9]*(\.[0-9]{1,2})$)|([0-9]+$))/;
-                if (!value) {
-                    return callback(new Error('费用不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的数字'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
             return {
                 states: [
                     {

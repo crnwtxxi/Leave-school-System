@@ -35,34 +35,9 @@
 
 <script>
     import Vue from 'vue'
+    import {checkChinese, checkCost, checkUsername, checkName} from '../../components/reg.js'
     export default {
         data() {
-             var checkChinese = (rule, value, callback) => {
-                 var inputPattern = /[\u4e00-\u9fa5]/;
-                    if (!value) {
-                         return callback(new Error('不能为空'));
-                     }
-                     setTimeout(() => {
-                     if (!inputPattern.test(value)) {
-                         callback(new Error('请正确输入,只能输入中文'));
-                     } else {
-                     callback();
-                     }
-                     }, 500);
-             };
-             var checkDigal = (rule, value, callback) => {
-                    var inputPattern = /^\d*\.?\d+$/;
-                    if (!value) {
-                         return callback(new Error('不能为空'));
-                     }
-                     setTimeout(() => {
-                         if (!inputPattern.test(value)) {
-                         callback(new Error('请正确输入,只能输入数字'));
-                         } else {
-                            callback();
-                         }
-                             }, 500);
-                         };
             return {
                 states: [
                     {
@@ -77,16 +52,16 @@
                 ruleForm: {},
                 rules: {
                     cost: [
-                        {validator:checkDigal,  trigger: 'blur' }
+                        {validator:checkCost,  trigger: 'blur' }
                     ],
                     remark: [
                         {validator:checkChinese,trigger: 'blur' }
                      ],
                      username:[
-                        {validator:checkDigal,trigger: 'blur' }
+                        {validator:checkUsername,trigger: 'blur' }
                      ],
                      name:[
-                       {validator:checkChinese,trigger: 'blur' }
+                       {validator:checkName,trigger: 'blur' }
                      ]
 
                 }

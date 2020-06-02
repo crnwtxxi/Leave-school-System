@@ -30,18 +30,9 @@
 </template>
 
 <script>
+    import {setPass} from '../../components/reg.js'
     export default {
         data() {
-            var validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入密码'));
-                } else {
-                    if (this.ruleForm.checkPwd !== '') {
-                        this.$refs.ruleForm.validateField('checkPwd');
-                    }
-                    callback();
-                }
-            };
             var validatePass2 = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请再次输入密码'));
@@ -63,7 +54,7 @@
                         { required: true, message: '请输入原密码', trigger: 'blur' }
                     ],
                     pwd: [
-                        { validator: validatePass, trigger: 'blur' }
+                        { validator: setPass, trigger: 'blur' }
                     ],
                     checkPwd: [
                         { validator: validatePass2, trigger: 'blur' }

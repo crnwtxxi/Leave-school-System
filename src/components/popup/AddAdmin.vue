@@ -25,21 +25,9 @@
 </template>
 
 <script>
+    import {checkUsername} from '../../components/reg.js'
     export default {
         data() {
-            var checkUsername = (rule, value, callback) => {
-                var inputPattern = /^\d{10}$/;
-                if (!value) {
-                    return callback(new Error('学号不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的学号'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
             return {
                 ruleForm: {
                     username: '',
