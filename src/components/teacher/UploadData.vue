@@ -30,8 +30,8 @@
                         <div class="el-upload__tip" slot="tip">只能上传xlxs文件，且不超过10M</div>
                     </el-upload>
                     <br/>
-                    <el-button size="small" type="primary" @click="uploadFile">立即上传</el-button>
-                    <el-button size="small" @click="cancelUpload">取消</el-button>
+                    <el-button size="small" type="primary" @click="uploadFile" class="isjs-ac">立即上传</el-button>
+                    <el-button size="small" @click="cancelUpload" class="isjs-ac">取消</el-button>
                 </div>
                 <div class="right">
                     <el-divider content-position="left">表头格式</el-divider>
@@ -79,6 +79,7 @@
 </template>
 
 <script>
+import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -205,6 +206,10 @@
                             duration: 1500
                         });
                     }).catch((error) => {
+                        console.log(error);
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
                         this.$notify({
                             title: "文件上传失败",
                             message: "请重试",
@@ -230,6 +235,7 @@
             }
         },
         mounted() {
+            doCollect();
             this.judgeRole();
         }
     }

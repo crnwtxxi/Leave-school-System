@@ -9,7 +9,7 @@
         <div class="content">
             <h3>
                 权限管理：
-                <el-button type="primary" size="mini" @click="handleAdd()">
+                <el-button type="primary" size="mini" @click="handleAdd()" class="isjs-ac">
                     增加
                     <i class="el-icon-upload el-icon--right"></i>
                 </el-button>
@@ -62,10 +62,12 @@
                         <template slot-scope="scope">
                             <el-button
                             size="mini"
+                            class="isjs-ac"
                             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                             <el-button
                             size="mini"
                             type="danger"
+                            class="isjs-ac"
                             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -111,6 +113,7 @@
 <script>
     import modifyAdminInfo from '@/components/popup/ModifyAdminInfo';
     import addAdmin from '@/components/popup/AddAdmin';
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -208,6 +211,7 @@
             addAdmin
         },
         mounted() {
+            doCollect();
             this.getAllAdmin();
             this.handleCurrentChange(1);
         }

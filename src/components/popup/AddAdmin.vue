@@ -17,8 +17,8 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">添加</el-button>
-                <el-button @click="resetForm('ruleForm')">清空</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">添加</el-button>
+                <el-button @click="resetForm('ruleForm')" class="isjs-ac">清空</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -26,6 +26,7 @@
 
 <script>
     import {checkUsername} from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -100,6 +101,9 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             }
+        },
+        mounted() {
+            doCollect();
         }
     }
 </script>

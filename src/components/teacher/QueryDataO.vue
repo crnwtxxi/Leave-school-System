@@ -10,7 +10,7 @@
         <div class="content">
             <h3>
                 查看数据：
-                <el-button type="primary" size="mini" @click="handleAdd()">增加<i class="el-icon-upload el-icon--right"></i></el-button>    
+                <el-button type="primary" size="mini" @click="handleAdd()" class="isjs-ac">增加<i class="el-icon-upload el-icon--right"></i></el-button>    
             </h3>
             <div class="data">
                 <div class="manage">
@@ -68,9 +68,11 @@
                                 <el-button
                                 size="mini"
                                 type="primary"
+                                class="isjs-ac"
                                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                                 <el-button
                                 size="mini"
+                                class="isjs-ac"
                                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
@@ -115,6 +117,7 @@
 <script>
     import modifyOfficeInfo from '@/components/popup/ModifyOfficeInfo';
     import addOffice from '@/components/popup/AddOffice';
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -230,6 +233,7 @@
             addOffice
         },
         mounted() {
+            doCollect();
             this.getOfficeData();
         }
     }

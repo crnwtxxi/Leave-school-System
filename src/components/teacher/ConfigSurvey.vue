@@ -44,13 +44,14 @@
         </el-collapse>
       </div>
       <div id="submit">
-        <el-button type="success" round v-on:click="handleBack" id="back">返回</el-button>
+        <el-button type="success" round v-on:click="handleBack" id="back" class="isjs-ac">返回</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {doCollect} from '../dataAcquisition.js'
   export default {
     data() {
       return {
@@ -72,6 +73,7 @@
       }
     },
     mounted() {
+      doCollect();
       //获取调查的id号
       var Sid = this.$route.query.id
       this.$axios({
