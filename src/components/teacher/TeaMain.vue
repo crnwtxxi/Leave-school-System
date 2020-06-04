@@ -82,12 +82,9 @@
     import postannounce from '@/components/teacher/PostAnnounce';
     import manageannounce from '@/components/teacher/ManageAnnounce';
     import manageauthority from '@/components/teacher/ManageAuthority';
-<<<<<<< HEAD
     import advancedSearch from '@/components/popup/AdvancedSearch';
-=======
     import datacollect from '@/components/teacher/DataCollect';
     import collectdetail from '@/components/teacher/CollectDetail';
->>>>>>> dev
     export default {
         data() {
             return {
@@ -190,12 +187,9 @@
             postannounce,
             manageannounce,
             manageauthority,
-<<<<<<< HEAD
-            advancedSearch
-=======
+            advancedSearch,
             datacollect,
             collectdetail
->>>>>>> dev
         },
         mounted() {
             this.toChangePwd2();

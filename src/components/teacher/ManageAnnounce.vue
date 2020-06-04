@@ -55,11 +55,8 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import advancedSearch from '@/components/popup/AdvancedSearch';
-=======
 import {doCollect} from '../dataAcquisition.js'
->>>>>>> dev
 export default {
     
     data() {
