@@ -7,16 +7,20 @@
         </el-breadcrumb>
         </div>
         <div class="content">
-        <h3>日志显示：</h3>
-        <div class="optBottom">
-            <el-button type="primary" @click="clearScreen">清屏</el-button>
-            <el-button type="primary" @click="scrollBottom">滚动至底部</el-button>
-            <el-button type="primary" @click="autoScroll">{{isScroll}}自动滚动</el-button>
-            <el-button type="primary" @click="download">下载<i class="el-icon-download"></i></el-button>
-        </div>
-        <div class="log">
+            <h3>日志显示：</h3>
+            <div class="optBottom">
+                <el-button type="primary" @click="clearScreen">清屏</el-button>
+                <!-- <el-button type="primary" @click="scrollBottom">滚动至底部</el-button>
+                <el-button type="primary" @click="autoScroll">{{isScroll}}自动滚动</el-button> -->
+            </div>
+        <!-- <div class="log">
             <textarea rows="18" v-model="content" class="logcontent" wrap="off" readonly="readonly" ></textarea>
-        </div>
+        </div> -->
+            <div class="logcnt">
+                <ul class="infinite-list" v-infinite-scroll="" style="overflow:auto" >
+                <span v-for="(i,index) in content" :key="index" class="infinite-list-item" v-html="i"></span>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -25,7 +29,7 @@
     export default {
         data() {
             return {
-                content:'1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24',
+                content:[],
                 isAutoScroll:false,
                 isScroll:'开启',
                 websock:null
@@ -33,7 +37,7 @@
         },
         methods: {
             clearScreen(){
-                this.content = '';
+                this.content.splice(0,this.content.length);
                 this.$notify({
                     offset: 100,
                     title: '清屏成功',
@@ -76,8 +80,10 @@
                 this.initWebSocket();
             },
             websocketonmessage(e){ //数据接收
-                console.log("接收到数据！");
-                console.log(e); 
+                this.content.push(e.data);
+                if(this.isAutoScroll == true){
+                    this.scrollBottom();
+                }
             },
             websocketclose(e){  //关闭
                 console.log('断开连接',e);
@@ -106,7 +112,7 @@
         top: 70px;
     }
     .optBottom{
-        margin-left: 59%;
+        margin-left: 65%;
     }
     .content h3 {
         margin-left: 40px;
@@ -115,6 +121,10 @@
         width: 80%;
         margin: 0 auto;
         margin-top: 30px;
+    }
+    .logcnt{
+        width: 80%;
+        margin:0 auto;
     }
     .logcontent{
         width: 100%;
