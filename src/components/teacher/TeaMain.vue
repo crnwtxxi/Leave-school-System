@@ -54,6 +54,10 @@
                         <i class="el-icon-collection-tag"></i>
                         <span slot="title" @click="toManageAuthority">权限管理</span>
                     </el-menu-item>
+                    <el-menu-item index="7" v-if="isSuper()">
+                        <i class="el-icon-notebook-1"></i>
+                        <span slot="title" @click="toLog">日志显示</span>
+                    </el-menu-item>
                 </el-menu>
             </div>
             <div class="component">
@@ -78,6 +82,7 @@
     import postannounce from '@/components/teacher/PostAnnounce';
     import manageannounce from '@/components/teacher/ManageAnnounce';
     import manageauthority from '@/components/teacher/ManageAuthority';
+    import displaylog from '@/components/teacher/DisplayLog';
     export default {
         data() {
             return {
@@ -126,6 +131,9 @@
             },
             toManageAuthority() {
                 this.$router.push('/teacher/manageauthority')
+            },
+            toLog(){
+                this.$router.push('/teacher/displaylog')
             },
             //方法
             isSuper() {
