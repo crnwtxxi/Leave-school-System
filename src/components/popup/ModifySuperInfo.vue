@@ -29,7 +29,7 @@
                 <el-input v-model="ruleForm.clazz"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">立即修改</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -38,6 +38,7 @@
 <script>
     import Vue from 'vue'
     import {checkCardid, checkChinese, checkClass} from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -131,6 +132,7 @@
             }
         },
         mounted() {
+            doCollect();
             this.getRowMsg();
         }
     }

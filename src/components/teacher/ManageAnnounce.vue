@@ -23,8 +23,8 @@
               <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
             </template>
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" @click="handleView(scope.$index, scope.row)" class="isjs-ac">查看</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" class="isjs-ac">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import {doCollect} from '../dataAcquisition.js'
 export default {
     data() {
         return {
@@ -171,6 +172,7 @@ export default {
         }
     },
     mounted() {
+        doCollect();
         this.getAnnounces();
     }
 };

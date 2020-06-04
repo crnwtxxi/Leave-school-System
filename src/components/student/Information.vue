@@ -36,7 +36,7 @@
                         <el-input v-model="form.cardid" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item style="text-align:center;">
-                        <el-button @click="verify" class="verify" v-if="!this.check">确认</el-button>
+                        <el-button @click="verify" class="verify isjs-ac" v-if="!this.check">确认</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import {doCollect} from '../dataAcquisition.js'
     export default {
         inject:['reload'], 
         data() {
@@ -167,6 +168,7 @@
             }
         },
         mounted() {
+            doCollect();
             this.getStudentInfo();//获取学生个人信息
             this.getUserInfo();//获取用户信息
             this.ifCheck();//获取当前用户信息核对情况

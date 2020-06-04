@@ -25,8 +25,8 @@
                 <el-input v-model="ruleForm.remark" placeholder="请输入备注，如没有备注信息，请输入无"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
-                <el-button @click="resetForm('ruleForm')">清空</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">立即修改</el-button>
+                <el-button @click="resetForm('ruleForm')" class="isjs-ac">清空</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -35,6 +35,7 @@
 <script>
     import Vue from 'vue'
     import {checkUsername, checkName, checkLocation, checkRemark} from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -116,6 +117,9 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             }
+        },
+        mounted() {
+            doCollect();
         }
     }
 </script>

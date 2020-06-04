@@ -57,6 +57,8 @@
                     <el-menu-item index="7" v-if="isSuper()">
                         <i class="el-icon-notebook-1"></i>
                         <span slot="title" @click="toLog">日志显示</span>
+                        <i class="el-icon-guide"></i>
+                        <span slot="title" @click="toDataCollect">行为采集</span>
                     </el-menu-item>
                 </el-menu>
             </div>
@@ -83,6 +85,8 @@
     import manageannounce from '@/components/teacher/ManageAnnounce';
     import manageauthority from '@/components/teacher/ManageAuthority';
     import displaylog from '@/components/teacher/DisplayLog';
+    import datacollect from '@/components/teacher/DataCollect';
+    import collectdetail from '@/components/teacher/CollectDetail';
     export default {
         data() {
             return {
@@ -135,6 +139,12 @@
             toLog(){
                 this.$router.push('/teacher/displaylog')
             },
+            toDataCollect() {
+                this.$router.push('/teacher/datacollect')
+            },
+            toCollectDetail() {
+                this.$router.push('/teacher/collectdetail')
+            },
             //方法
             isSuper() {
                 if(this.userMsg.role == 'super') {
@@ -181,7 +191,9 @@
             configsurvey,
             postannounce,
             manageannounce,
-            manageauthority
+            manageauthority,
+            datacollect,
+            collectdetail
         },
         mounted() {
             this.toChangePwd2();

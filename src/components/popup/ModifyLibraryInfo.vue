@@ -22,7 +22,7 @@
         <el-input v-model="ruleForm.remark"></el-input>
       </el-form-item>
       <el-form-item style="text-align:center;margin-left:-70px;">
-        <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">立即修改</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -31,6 +31,7 @@
 <script>
   import Vue from 'vue'
   import {checkChinese, checkDigal} from '../../components/reg.js'
+import { doCollect } from '../dataAcquisition';
   export default {
     data() {
       return {
@@ -124,6 +125,7 @@
       }
     },
     mounted() {
+      doCollect();
       this.getRowMsg();
 
     }
@@ -132,7 +134,5 @@
 </script>
 
 <style scoped>
-.demo-ruleForm{
-    
-}
+
 </style>

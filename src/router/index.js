@@ -54,7 +54,12 @@ import configsurvey from '@/components/teacher/ConfigSurvey';
 import postannounce from '@/components/teacher/PostAnnounce';
 import manageannounce from '@/components/teacher/ManageAnnounce';
 import manageauthority from '@/components/teacher/ManageAuthority';
+<<<<<<< HEAD
 import displaylog from '@/components/teacher/DisplayLog';
+=======
+import datacollect from '@/components/teacher/DataCollect';
+import collectdetail from '@/components/teacher/CollectDetail';
+>>>>>>> 94a5a6da562879bbaf9beecd58a5f286b069ea98
 //弹框组件
 import addAdmin from '@/components/popup/AddAdmin';
 import addStudent from '@/components/popup/AddStudent';
@@ -186,9 +191,19 @@ export default new Router({
           name: 'teannounce',
           component: teannounce
         },{
+<<<<<<< HEAD
           path: 'displaylog',
           name: 'displaylog',
           component: displaylog
+=======
+          path: 'datacollect',
+          name: 'datacollect',
+          component: datacollect
+        },{
+          path: 'collectdetail',
+          name: 'collectdetail',
+          component: collectdetail
+>>>>>>> 94a5a6da562879bbaf9beecd58a5f286b069ea98
         }
       ]
     },
