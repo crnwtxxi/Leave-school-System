@@ -54,6 +54,7 @@ import configsurvey from '@/components/teacher/ConfigSurvey';
 import postannounce from '@/components/teacher/PostAnnounce';
 import manageannounce from '@/components/teacher/ManageAnnounce';
 import manageauthority from '@/components/teacher/ManageAuthority';
+import displaylog from '@/components/teacher/DisplayLog';
 import datacollect from '@/components/teacher/DataCollect';
 import collectdetail from '@/components/teacher/CollectDetail';
 //弹框组件
@@ -187,6 +188,10 @@ export default new Router({
           path: 'teannounce',
           name: 'teannounce',
           component: teannounce
+        },{
+          path: 'displaylog',
+          name: 'displaylog',
+          component: displaylog
         },{
           path: 'datacollect',
           name: 'datacollect',
