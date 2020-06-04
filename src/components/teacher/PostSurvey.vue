@@ -11,7 +11,7 @@
             <h3>发布调查：</h3>
             <div class="QA">
                       <h4>调查题目：</h4>
-                      <input class="eInput" style="width: 500px;" v-model="title" placeholder="请输入标题">
+                      <input class="eInput" style="width: 500px;" v-model="title" placeholder="请输入标题（100字以内）">
                        <el-button type="primary" plain class="add" style="float: right;  " v-on:click="verify">发布
                        </el-button>
                       <el-tabs v-model="activeName" >
@@ -19,7 +19,7 @@
                     <div id="select" >                       
                         <ul>
                            <li v-for="(item,index) in items" style="margin-top:30px">
-                            <input style="width:500px;margin-left: 15px" class="eInput" placeholder="请输入标题" @input="updateTitleSelect($event,index)">
+                            <input style="width:500px;margin-left: 15px" class="eInput" placeholder="请输入标题（标题50字以内，答案20字以内）" @input="updateTitleSelect($event,index)">
                
                             <br>
                             <br>
@@ -116,6 +116,19 @@
                 if((!flg1||!flg2)){
                     this.open()
                 }
+                else if(check1.length>20)
+                {
+                   
+                    this.$notify({
+                    title: "注意字数",
+                    message: "不能超过20字",
+                    offset: 100,
+                    type: "error",
+                    showClose: false,
+                    duration: 2000
+                    });
+                
+                }
                 else {
                 this.items.push({title:'',option:["","","",""]})
                     }
@@ -130,6 +143,18 @@
                 if(check1==''){
                     this.open()
                 }
+                else if(check1.length>20){
+                    
+                    this.$notify({
+                    title: "注意字数",
+                    message: "不能超过20字",
+                    offset: 100,
+                    type: "error",
+                    showClose: false,
+                    duration: 2000
+                    });
+                    
+                }
                 else{
                 this.question.push({title:""})
             }
@@ -139,12 +164,15 @@
             updateTitleSelect(event,index){
                 
                 var updateValue=event.currentTarget.value
+                
+                
                 this.items[index].title=this.stripscript(updateValue)
             },
             //更新标题选项，并进行xss过滤
             updateSelectOption(event,index,optionIndex){
                 var updateValue=event.currentTarget.value       
-                this.items[index].option[optionIndex]=this.stripscript(updateValue)
+                  this.items[index].option[optionIndex]=this.stripscript(updateValue)
+
                
             },
             //更新问答题标题，并进行xss过滤

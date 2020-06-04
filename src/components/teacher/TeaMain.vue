@@ -85,6 +85,7 @@
     import manageannounce from '@/components/teacher/ManageAnnounce';
     import manageauthority from '@/components/teacher/ManageAuthority';
     import displaylog from '@/components/teacher/DisplayLog';
+    import advancedSearch from '@/components/popup/AdvancedSearch';
     import datacollect from '@/components/teacher/DataCollect';
     import collectdetail from '@/components/teacher/CollectDetail';
     export default {
@@ -192,6 +193,7 @@
             postannounce,
             manageannounce,
             manageauthority,
+            advancedSearch,
             datacollect,
             collectdetail
         },
