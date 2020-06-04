@@ -12,9 +12,9 @@
             <div class="data clearfix">
                 <div class="head clearfix">
                     <div class="delete">
-                        <el-button type="primary" size="mini" @click="handleAdd()">增加<i class="el-icon-upload el-icon--right"></i>
+                        <el-button type="primary" size="mini" @click="handleAdd()" class="isjs-ac">增加<i class="el-icon-upload el-icon--right"></i>
                         </el-button>
-                        <el-button type="danger" size="mini" @click="handleDelete()">删除<i class="el-icon-delete el-icon--right"></i></el-button>
+                        <el-button type="danger" size="mini" @click="handleDelete()" class="isjs-ac">删除<i class="el-icon-delete el-icon--right"></i></el-button>
                     </div>
                 </div>
                 <div class="manage">
@@ -72,6 +72,7 @@
                                 <el-button
                                 size="mini"
                                 type="primary"
+                                class="isjs-ac"
                                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                             </template>
                         </el-table-column>
@@ -116,6 +117,7 @@
 <script>
     import modifyDormInfo from '@/components/popup/ModifyDormInfo';
     import addDorm from '@/components/popup/AddDorm';
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -248,6 +250,7 @@
             }
         },
         mounted() {
+            doCollect();
             this.getDormInfo();
         },
         components: {

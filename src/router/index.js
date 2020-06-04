@@ -55,6 +55,8 @@ import postannounce from '@/components/teacher/PostAnnounce';
 import manageannounce from '@/components/teacher/ManageAnnounce';
 import manageauthority from '@/components/teacher/ManageAuthority';
 import displaylog from '@/components/teacher/DisplayLog';
+import datacollect from '@/components/teacher/DataCollect';
+import collectdetail from '@/components/teacher/CollectDetail';
 //弹框组件
 import addAdmin from '@/components/popup/AddAdmin';
 import addStudent from '@/components/popup/AddStudent';
@@ -69,6 +71,7 @@ import modifyDormInfo from '@/components/popup/ModifyDormInfo';
 import modifySuperInfo from '@/components/popup/ModifySuperInfo';
 import modifyOfficeInfo from '@/components/popup/ModifyOfficeInfo';
 import teannounce from '@/components/teacher/Announce';
+import advancedSearch from '@/components/popup/AdvancedSearch';
 
 
 //暴露路由对象
@@ -189,6 +192,14 @@ export default new Router({
           path: 'displaylog',
           name: 'displaylog',
           component: displaylog
+        },{
+          path: 'datacollect',
+          name: 'datacollect',
+          component: datacollect
+        },{
+          path: 'collectdetail',
+          name: 'collectdetail',
+          component: collectdetail
         }
       ]
     },
@@ -239,6 +250,10 @@ export default new Router({
     {
       path: '/addOffice',
       component: addOffice
+    },
+    {
+      path: '/advancedSearch',
+      component: advancedSearch
     }
   ]
 })

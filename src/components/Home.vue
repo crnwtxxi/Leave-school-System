@@ -142,7 +142,6 @@ export default {
     mounted() {
         this.getAnnounces();
         this.handleCurrentChange(1);
-        // this.showdate();
     }
 }
 </script>

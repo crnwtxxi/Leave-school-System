@@ -12,10 +12,16 @@
       <div class="data">
         <div class="head clearfix">
           <div class="delete">
-            <el-button type="primary" size="mini" @click="handleAdd()">增加<i class="el-icon-upload el-icon--right"></i>
+            <el-button type="primary" size="mini" @click="handleAdd()" class="isjs-ac">增加<i class="el-icon-upload el-icon--right"></i>
             </el-button>
-            <el-button type="danger" size="mini" @click="handleDelete()">删除<i class="el-icon-delete el-icon--right"></i>
+            <el-button type="danger" size="mini" @click="handleDelete()" class="isjs-ac">删除<i class="el-icon-delete el-icon--right"></i>
             </el-button>
+            
+          </div>
+          <div class="search">
+            <input style="width:250px;margin-left: 15px" class="eInput" placeholder=""
+              @input="updateTitleSelect($event,index)">
+            <el-button icon="el-icon-search" circle></el-button>
           </div>
 
         </div>
@@ -43,7 +49,7 @@
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)" class="isjs-ac">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -75,6 +81,7 @@
 <script>
   import modifyLibraryInfo from '@/components/popup/ModifyLibraryInfo';
   import addLibrary from '@/components/popup/AddLibrary';
+  import {doCollect} from '../dataAcquisition.js'
   export default {
     data() {
       return {
@@ -226,6 +233,7 @@
       addLibrary
     },
     mounted() {
+      doCollect();
       this.$axios({
         method: 'get',
         url: '/api/library/get/list'
@@ -313,5 +321,29 @@
   .clearfix:after {
     clear: both
   }
+    .eInput{
+    width:150px;
+    border-radius: 4px;
+    border:1px solid #dcdfe6;
+    height: 40px;
+    line-height:40px;
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    padding: 0 15px;
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
 
+    }
+.search{
+  float:right;
+}
 </style>

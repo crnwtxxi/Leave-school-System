@@ -20,8 +20,8 @@
                         <el-input type="password" v-model="ruleForm.checkPwd" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item style="text-align:right;">
-                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                        <el-button @click="resetForm('ruleForm')">清空</el-button>
+                        <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">提交</el-button>
+                        <el-button @click="resetForm('ruleForm')" class="isjs-ac">清空</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -31,6 +31,8 @@
 
 <script>
     import {setPass} from '../../components/reg.js'
+    // import $ from 'jquery'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             var validatePass2 = (rule, value, callback) => {
@@ -122,10 +124,9 @@
                 }
             },
             mounted(){
+                doCollect();
                 this.getAdminMsg();
-            },
-            components: {
-
+                
             }
     }
 </script>
