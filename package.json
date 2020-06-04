@@ -18,6 +18,8 @@
     "element-ui": "^2.13.1",
     "js-base64": "^2.5.2",
     "js-md5": "^0.7.3",
+    "lib-flexible": "^0.3.2",
+    "px2rem-loader": "^0.1.9",
     "vue": "^2.5.2",
     "vue-axios": "2.1.5",
     "vue-router": "^3.0.1",

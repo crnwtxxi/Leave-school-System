@@ -68,6 +68,7 @@ import modifyDormInfo from '@/components/popup/ModifyDormInfo';
 import modifySuperInfo from '@/components/popup/ModifySuperInfo';
 import modifyOfficeInfo from '@/components/popup/ModifyOfficeInfo';
 import teannounce from '@/components/teacher/Announce';
+import advancedSearch from '@/components/popup/AdvancedSearch';
 
 
 //暴露路由对象
@@ -234,6 +235,10 @@ export default new Router({
     {
       path: '/addOffice',
       component: addOffice
+    },
+    {
+      path: '/advancedSearch',
+      component: advancedSearch
     }
   ]
 })

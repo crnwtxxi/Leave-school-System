@@ -8,11 +8,17 @@
       </el-breadcrumb>
     </div>
     <div class="content">
-      <h3>管理调查：</h3>
+       <div>
+       <h3>管理调查：</h3>
+      
+       </div>
+      
       <div id="table">
+         <!-- :data="tableViewData.filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase()))" -->
+        
         <el-table
           v-loading="loading"
-          :data="tableViewData.filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase()))"
+          :data="tableViewData"
           style="width: 100%">
           <el-table-column label="调查标题" prop="title"></el-table-column>
           <el-table-column label="调查发表时间" prop="date"></el-table-column>
@@ -20,7 +26,11 @@
           <el-table-column align="right">
             <!-- scope在此没有使用过 -->
             <template slot="header">
-           
+                 <input style="width:250px;margin-left: 15px" class="eInput" placeholder=""
+                   @input="updateTitleSelect($event)">
+                   <el-button icon="el-icon-search" circle @click="baseSearch"></el-button>
+                  
+              
             </template>
             <template slot-scope="scope">
               <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
@@ -53,7 +63,10 @@
         search: "",
         currentPage: 1,
         pageSize: 1,
-        loading:true
+        loading:true,
+        tmpdata:[]
+        
+
       };
     },
     methods: {
@@ -66,6 +79,7 @@
           }
         });
       },
+      
       // 设置公告的有效性
       setTag(index, row) {
         if (this.tableViewData[index].tag == "有效") {
@@ -92,6 +106,7 @@
           });
         }
       },
+    
       postDelete(id) {
         this.$axios({
           method: 'get',
@@ -116,6 +131,11 @@
             duration: 1500
           });
         })
+      },
+      updateTitleSelect(event){
+           var updateValue=event.currentTarget.value
+           this.search=this.stripscript(updateValue)
+           console.log(updateValue)
       },
       // 删除公告的点击事件
       handleDelete(index, row) {
@@ -144,17 +164,38 @@
         this.handleCurrentChange(1);
       },
       // currentPage 改变时会触发
+        baseSearch()
+        {
+        console.log(this.search)
+        this.tmpdata=[]
+        for(var i = 0 ; i < this.announceCount ;i++){ console.log(this.tableData[i].title)
+          console.log(this.tableData[i].title.indexOf(this.search)) 
+          if(this.tableData[i].title.indexOf(this.search)>-1){
+          console.log(this.tableData[i].title.indexOf(this.search))
+          this.tmpdata.push(this.tableData[i])
+          }
+          }
+          console.log(this.tmpdata)
+          this.handleCurrentChange(1)
+
+          },
       handleCurrentChange(val) {
         this.currentPage = val;
         this.tableViewData.splice(0, this.tableViewData.length);
 
         for (
           var i = (this.currentPage - 1) * this.pageSize; i < this.currentPage * this.pageSize && i < this
-          .announceCount; i++
+          .tmpdata.length; i++
         ) {
-          this.tableViewData.push(this.tableData[i]);
+          this.tableViewData.push(this.tmpdata[i]);
         }
       },
+         stripscript(s)
+         {
+         //过滤掉敏感的字母,预防xss攻击
+         var pattern = new RegExp("[%--`~!@#$^&*()=|{}''\\[\\]<>/?~！@#￥……&*（）――|{}【】‘”“']")
+           var rs = "";
+           for (var i = 0; i < s.length; i++) { rs=rs+s.substr(i,1).replace(pattern,''); } return rs; },
 
       // 筛选标记位
       filterTag(value, row) {
@@ -175,6 +216,7 @@
         for (var i = 0; i < len; i++) {
           this.tableData[i].date = this.tableData[i].date.substring(0, 10)
         }
+        this.tmpdata=this.tableData
         this.handleCurrentChange(1);
         this.loading=false; 
       }).catch((error) => {
@@ -227,6 +269,29 @@
   #add {
     margin-left: 82%;
     margin-bottom: 10px;
+  }
+
+  .eInput{
+  width:150px;
+  border-radius: 4px;
+  border:1px solid #dcdfe6;
+  height: 40px;
+  line-height:40px;
+  -webkit-appearance: none;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+  box-sizing: border-box;
+  color: #606266;
+  display: inline-block;
+  font-size: inherit;
+  height: 40px;
+  line-height: 40px;
+  outline: none;
+  padding: 0 15px;
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+
   }
 
 </style>

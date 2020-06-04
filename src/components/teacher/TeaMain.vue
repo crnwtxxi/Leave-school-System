@@ -78,6 +78,7 @@
     import postannounce from '@/components/teacher/PostAnnounce';
     import manageannounce from '@/components/teacher/ManageAnnounce';
     import manageauthority from '@/components/teacher/ManageAuthority';
+    import advancedSearch from '@/components/popup/AdvancedSearch';
     export default {
         data() {
             return {
@@ -173,7 +174,8 @@
             configsurvey,
             postannounce,
             manageannounce,
-            manageauthority
+            manageauthority,
+            advancedSearch
         },
         mounted() {
             this.toChangePwd2();

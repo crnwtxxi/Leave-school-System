@@ -20,7 +20,10 @@
           <el-table-column label="发表日期" prop="date"></el-table-column>
           <el-table-column align="right">
             <template slot="header" slot-scope>
-              <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
+             <input style="width:250px;margin-left: 15px" class="eInput" placeholder=""
+               @input="updateTitleSelect($event)">
+             <el-button icon="el-icon-search" circle @click="baseSearch"></el-button>
+               <el-button type="primary" @click="handleAdvancedSearch">高级搜索</el-button>
             </template>
             <template slot-scope="scope">
               <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
@@ -41,11 +44,20 @@
         ></el-pagination>
       </div>
     </div>
+     <el-dialog title="高级搜索" :visible.sync="advancedSearch_dialogTableVisible" center :append-to-body='true'
+       :lock-scroll="false" :before-close="handleDialogClose" width="500px">
+       <advancedSearch></advancedSearch>
+     </el-dialog>
   </div>
+  
+ 
+  
 </template>
 
 <script>
+import advancedSearch from '@/components/popup/AdvancedSearch';
 export default {
+    
     data() {
         return {
             msg: "",
@@ -62,14 +74,80 @@ export default {
             currentPage: 1,
             // 每页公告的数量
             pageSize: 5,
-            loading: true
+            loading: true,
+            searchConten:'',
+            advancedSearch_dialogTableVisible:false,
+            tmpdata:[]
         };
+    },
+    components: {
+        advancedSearch
     },
     methods: {
         //   查看公告的点击事件
         handleView(index, row) {
             this.$router.push({ path: "/teacher/teannounce", query: { id: row.id } });
         },
+         updateTitleSelect(event){
+                var updateValue=event.currentTarget.value
+                this.searchConten=this.stripscript(updateValue)
+                console.log(updateValue)
+         },
+         handleAdvancedSearch() {
+         this.advancedSearch_dialogTableVisible = true;
+         },
+         handleDialogClose(){
+         this.advancedSearch_dialogTableVisible = false;
+
+         },
+        stripscript(s)
+          {
+          //过滤掉敏感的字母,预防xss攻击
+          var pattern = new RegExp("[%--`~!@#$^&*()=|{}''\\[\\]<>/?~！@#￥……&*（）――|{}【】‘”“']")
+            var rs = "";
+            for (var i = 0; i < s.length; i++) { rs=rs+s.substr(i,1).replace(pattern,''); } return rs;
+         },
+         baseSearch(){
+                    console.log(this.searchConten)
+                    console.log(this.search)
+                    this.tmpdata=[]
+                    for(var i = 0 ; i < this.announceCount ;i++){ console.log(this.tableData[i].title)
+                      console.log(this.tableData[i].title.indexOf(this.searchConten))
+                      if(this.tableData[i].title.indexOf(this.searchConten)>-1){
+                        console.log(this.tableData[i].title.indexOf(this.searchConten))
+                      this.tmpdata.push(this.tableData[i])
+                      }
+                      }
+                      console.log(this.tmpdata)
+                      this.handleCurrentChange(1)
+                    //   this.loading = true;
+                    //   this.$axios({
+                    //   method: "get",
+                    //   url: "/api/notice_search/full",
+                    //   params:{keyword:this.searchConten}
+                    //   }).then(res => {
+                    //   this.$message({
+                    //   type: "success",
+                    //   message: "获取公告成功!"
+                    //   });
+                    //   console.log(res.data)
+                    //   this.tableData.splice(0, this.tableData.length);
+                    //   res.data.forEach(element => {
+                    //   if (element.valid == true) {
+                    //   this.tableData.push(element);
+                    //   }
+                    //   });
+                    //   this.announceCount = this.tableData.length;
+                    //   this.handleCurrentChange(1);
+                    //   }).catch(error => {
+                    //   this.$message({
+                    //   type: "error",
+                    //   message: "获取公告失败!"
+                    //   });
+                    //   });
+                    //   this.loading=false
+                      
+         },
         // 删除公告的点击事件
         handleDelete(index, row) {
             this.$confirm("此操作将永久删除该公告, 是否继续?", "提示", {
@@ -136,7 +214,7 @@ export default {
                 i < this.currentPage * this.pageSize && i < this.announceCount;
                 i++
             ) {
-                var tempData = this.tableData[i];
+                var tempData = this.tmpdata[i];
                 tempData.date = tempData.date.substring(0, 10);
                 this.tableViewData.push(tempData);
             }
@@ -160,6 +238,7 @@ export default {
                         this.tableData.push(element);
                     }
                 });
+                this.tmpdata=this.tableData
                 this.announceCount = this.tableData.length;
                 this.handleCurrentChange(1);
             }).catch(error => {
@@ -205,4 +284,27 @@ export default {
     margin-left: 82%;
     margin-bottom: 10px;
 }
+  .eInput{
+  width:150px;
+  border-radius: 4px;
+  border:1px solid #dcdfe6;
+  height: 40px;
+  line-height:40px;
+  -webkit-appearance: none;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+  box-sizing: border-box;
+  color: #606266;
+  display: inline-block;
+  font-size: inherit;
+  height: 40px;
+  line-height: 40px;
+  outline: none;
+  padding: 0 15px;
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+
+  }
+
 </style>
