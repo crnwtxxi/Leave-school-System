@@ -21,8 +21,8 @@
                         <el-input type="password" v-model="ruleForm.checkPwd" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item style="text-align:right;">
-                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                        <el-button @click="resetForm('ruleForm')">清空</el-button>
+                        <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">提交</el-button>
+                        <el-button @click="resetForm('ruleForm')" class="isjs-ac">清空</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -31,22 +31,12 @@
 </template>
 
 <script>
+    import { setPass } from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
-            var validatePass = (rule, value, callback) => {
-                var inputPattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
-                if (!value) {
-                    return callback(new Error('身份证不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('密码至少包含 数字和英文，长度6-20，请重新输入'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
-            var validatePass2 = (rule, value, callback) => {
+            //确认密码
+            var ensurePass = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请再次输入密码'));
                 } else if (value !== this.ruleForm.pwd) {
@@ -67,10 +57,10 @@
                         { required: true, message: '请输入原密码', trigger: 'blur' }
                     ],
                     pwd: [
-                        { validator: validatePass, trigger: 'blur' }
+                        { validator: setPass, trigger: 'blur' }
                     ],
                     checkPwd: [
-                        { validator: validatePass2, trigger: 'blur' }
+                        { validator: ensurePass, trigger: 'blur' }
                     ]
                 }
             }
@@ -136,6 +126,7 @@
                 },
             },
             mounted() {
+                doCollect();
                 this.getStuMsg();
             }
     }

@@ -26,8 +26,8 @@
                 <el-input v-model="ruleForm.class"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即添加</el-button>
-                <el-button @click="resetForm('ruleForm')">清空</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">立即添加</el-button>
+                <el-button @click="resetForm('ruleForm')" class="isjs-ac">清空</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -35,60 +35,10 @@
 
 <script>
     import Vue from 'vue'
+    import {checkUsername, checkChinese, checkClass} from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
-            var checkCardid = (rule, value, callback) => {
-                var inputPattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-                if (!value) {
-                    return callback(new Error('身份证不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的身份证号'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
-            var checkUsername = (rule, value, callback) => {
-                var inputPattern = /^\d{10}$/;
-                if (!value) {
-                    return callback(new Error('学号不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的学号'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
-            var checkChinese = (rule, value, callback) => {
-                var inputPattern = /[\u4e00-\u9fa5]/;
-                if (!value) {
-                    return callback(new Error('不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请正确输入,只能输入中文'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
-            var checkClass = (rule, value, callback) => {
-                var inputPattern = /^\d{1,2}$/;
-                if (!value) {
-                    return callback(new Error('班级不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的数字，长度为1-2'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
             return {
                 ruleForm: {
                     username: "",
@@ -181,6 +131,9 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             }
+        },
+        mounted() {
+            doCollect();
         }
     }
 </script>

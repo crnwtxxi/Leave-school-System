@@ -17,29 +17,18 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">添加</el-button>
-                <el-button @click="resetForm('ruleForm')">清空</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">添加</el-button>
+                <el-button @click="resetForm('ruleForm')" class="isjs-ac">清空</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script>
+    import {checkUsername} from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
-            var checkUsername = (rule, value, callback) => {
-                var inputPattern = /^\d{10}$/;
-                if (!value) {
-                    return callback(new Error('学号不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的学号'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
             return {
                 ruleForm: {
                     username: '',
@@ -112,6 +101,9 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             }
+        },
+        mounted() {
+            doCollect();
         }
     }
 </script>

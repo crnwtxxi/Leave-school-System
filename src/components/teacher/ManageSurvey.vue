@@ -33,9 +33,9 @@
               
             </template>
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
+              <el-button size="mini" @click="handleView(scope.$index, scope.row)" class="isjs-ac">查看</el-button>
    
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" class="isjs-ac">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import {doCollect} from '../dataAcquisition.js'
   export default {
     data() {
       return {
@@ -203,7 +204,7 @@
       }
     },
     mounted() {
-
+      doCollect();
       this.$axios({
         method: 'get',
         url: '/api/survey/get/list'

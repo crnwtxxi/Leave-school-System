@@ -1,7 +1,7 @@
 <template>
     <div class="stumain_container">
         <div class="header">
-            <div class="system">数字离线系统</div>
+            <div class="system">数字离校系统</div>
             <div class="nav">
                 <a href="">帮助</a> | 
                 <a href="">关于</a> | 

@@ -29,7 +29,7 @@
                 <el-input v-model="ruleForm.clazz"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">立即修改</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -37,47 +37,10 @@
 
 <script>
     import Vue from 'vue'
+    import {checkCardid, checkChinese, checkClass} from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
-            var checkCardid = (rule, value, callback) => {
-                var inputPattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-                if (!value) {
-                    return callback(new Error('身份证不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的身份证号'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
-            var checkChinese = (rule, value, callback) => {
-                var inputPattern = /[\u4e00-\u9fa5]/;
-                if (!value) {
-                    return callback(new Error('不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请正确输入,只能输入中文'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
-            var checkClass = (rule, value, callback) => {
-                var inputPattern = /^\d{1,2}$/;
-                if (!value) {
-                    return callback(new Error('班级不能为空'));
-                }
-                setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入正确的数字，长度为1-2'));
-                    } else {
-                        callback();
-                    }
-                }, 1000);
-            };
             return {
                 ruleForm: {},
                 rules: {
@@ -169,6 +132,7 @@
             }
         },
         mounted() {
+            doCollect();
             this.getRowMsg();
         }
     }

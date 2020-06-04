@@ -75,9 +75,11 @@
                                 <el-button
                                 size="mini"
                                 type="primary"
+                                class="isjs-ac"
                                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                                 <el-button
                                 size="mini"
+                                class="isjs-ac"
                                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
@@ -124,6 +126,7 @@
 <script>
     import modifySuperInfo from '@/components/popup/ModifySuperInfo';
     import addStudent from '@/components/popup/AddStudent';
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
             return {
@@ -215,6 +218,7 @@
             addStudent
         },
         mounted() {
+            doCollect();
             this.getAllStudent();
         }
     }

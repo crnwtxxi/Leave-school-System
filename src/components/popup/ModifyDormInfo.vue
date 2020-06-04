@@ -25,7 +25,7 @@
                 <el-input v-model="ruleForm.remark" placeholder="请输入备注，如没有备注信息，请输入无"></el-input>
             </el-form-item>
             <el-form-item style="text-align:center;margin-left:-70px;">
-                <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">立即修改</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -33,19 +33,10 @@
 
 <script>
     import Vue from 'vue'
+    import {checkRemark} from '../../components/reg.js'
+    import {doCollect} from '../dataAcquisition.js'
     export default {
         data() {
-            // 输入备注信息的验证
-            var remark = (rule, value, callback) => {
-                var inputPattern = /[\u4e00-\u9fa5]{1,10}/
-                 setTimeout(() => {
-                    if (!inputPattern.test(value)) {
-                        callback(new Error('请输入10个以内的中文字符'));
-                    } else {
-                        callback();
-                    }         
-                }, 100);
-            };
             return {
                  states: [
                     {
@@ -74,7 +65,7 @@
                     ],
                     remark: [
                         { required: true, message: '请输入备注', trigger: 'change' },
-                        {validator: remark, trigger: 'change'}
+                        {validator: checkRemark, trigger: 'change'}
                     ]
                 }
             };
@@ -135,6 +126,7 @@
             }
         },
         mounted() {
+            doCollect();
             this.getRowMsg();
         }
     }

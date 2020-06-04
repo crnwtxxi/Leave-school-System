@@ -31,8 +31,8 @@
 						/>
 					</el-form-item>
 					<el-form-item style="text-align:right;">
-						<el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
-						<el-button @click="resetForm('ruleForm')">重置</el-button>
+						<el-button type="primary" @click="submitForm('ruleForm')" class="isjs-ac">立即发布</el-button>
+						<el-button @click="resetForm('ruleForm')" class="isjs-ac">重置</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import {doCollect} from '../dataAcquisition.js'
 export default {
   	data() {
 		var title = (rule, value, callback) => {
@@ -165,7 +166,10 @@ export default {
 		var obj = JSON.parse(sessionStorage.getItem("user"));
 		return obj.username;
 		}
-  	}
+	  },
+	  mounted() {
+		  doCollect();
+	  }
 };
 </script>
 

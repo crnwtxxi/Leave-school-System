@@ -26,8 +26,8 @@
                <el-button type="primary" @click="handleAdvancedSearch">高级搜索</el-button>
             </template>
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" @click="handleView(scope.$index, scope.row)" class="isjs-ac">查看</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" class="isjs-ac">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -55,7 +55,11 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import advancedSearch from '@/components/popup/AdvancedSearch';
+=======
+import {doCollect} from '../dataAcquisition.js'
+>>>>>>> dev
 export default {
     
     data() {
@@ -250,6 +254,7 @@ export default {
         }
     },
     mounted() {
+        doCollect();
         this.getAnnounces();
     }
 };

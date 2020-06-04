@@ -1,7 +1,7 @@
 <template>
     <div class="stumain_container">
         <div class="header">
-            <div class="system">数字离线系统</div>
+            <div class="system">数字离校系统</div>
             <div class="nav">
                 <a href="">帮助</a> | 
                 <a href="">关于</a> | 
@@ -54,6 +54,10 @@
                         <i class="el-icon-collection-tag"></i>
                         <span slot="title" @click="toManageAuthority">权限管理</span>
                     </el-menu-item>
+                    <el-menu-item index="7" v-if="isSuper()">
+                        <i class="el-icon-guide"></i>
+                        <span slot="title" @click="toDataCollect">行为采集</span>
+                    </el-menu-item>
                 </el-menu>
             </div>
             <div class="component">
@@ -78,7 +82,12 @@
     import postannounce from '@/components/teacher/PostAnnounce';
     import manageannounce from '@/components/teacher/ManageAnnounce';
     import manageauthority from '@/components/teacher/ManageAuthority';
+<<<<<<< HEAD
     import advancedSearch from '@/components/popup/AdvancedSearch';
+=======
+    import datacollect from '@/components/teacher/DataCollect';
+    import collectdetail from '@/components/teacher/CollectDetail';
+>>>>>>> dev
     export default {
         data() {
             return {
@@ -128,6 +137,12 @@
             toManageAuthority() {
                 this.$router.push('/teacher/manageauthority')
             },
+            toDataCollect() {
+                this.$router.push('/teacher/datacollect')
+            },
+            toCollectDetail() {
+                this.$router.push('/teacher/collectdetail')
+            },
             //方法
             isSuper() {
                 if(this.userMsg.role == 'super') {
@@ -175,7 +190,12 @@
             postannounce,
             manageannounce,
             manageauthority,
+<<<<<<< HEAD
             advancedSearch
+=======
+            datacollect,
+            collectdetail
+>>>>>>> dev
         },
         mounted() {
             this.toChangePwd2();

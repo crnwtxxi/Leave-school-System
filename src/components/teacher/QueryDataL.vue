@@ -12,9 +12,9 @@
       <div class="data">
         <div class="head clearfix">
           <div class="delete">
-            <el-button type="primary" size="mini" @click="handleAdd()">增加<i class="el-icon-upload el-icon--right"></i>
+            <el-button type="primary" size="mini" @click="handleAdd()" class="isjs-ac">增加<i class="el-icon-upload el-icon--right"></i>
             </el-button>
-            <el-button type="danger" size="mini" @click="handleDelete()">删除<i class="el-icon-delete el-icon--right"></i>
+            <el-button type="danger" size="mini" @click="handleDelete()" class="isjs-ac">删除<i class="el-icon-delete el-icon--right"></i>
             </el-button>
             
           </div>
@@ -49,7 +49,7 @@
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)" class="isjs-ac">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -81,6 +81,7 @@
 <script>
   import modifyLibraryInfo from '@/components/popup/ModifyLibraryInfo';
   import addLibrary from '@/components/popup/AddLibrary';
+  import {doCollect} from '../dataAcquisition.js'
   export default {
     data() {
       return {
@@ -232,6 +233,7 @@
       addLibrary
     },
     mounted() {
+      doCollect();
       this.$axios({
         method: 'get',
         url: '/api/library/get/list'
